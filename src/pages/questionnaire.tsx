@@ -6,9 +6,12 @@ import { Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 
 const QuestionnairePage = () => {
-  const { questions, loading } = useGetQuestions();
+  const { currentQuestion, loading, currentNumber } = useGetQuestions();
+  const [totalWeighting, setTotalWeighting] = useState(0);
 
-  const onClickNext = (weighting: number) => {};
+  const onClickNext = (weighting: number) => {
+    setTotalWeighting((prev) => prev + weighting);
+  };
 
   const onClickSubmit = () => {};
 

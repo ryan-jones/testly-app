@@ -5,12 +5,10 @@ import { Survey } from '@/types/surveys';
 
 const surveysCollection = collection(db, 'surveys');
 
-const useGetQuestions = () => {
+const useGetSurveys = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [surveys, setSurveys] = useState<Survey[]>([]);
-  const [currentSurvey, setCurrentSurvey] = useState<Survey | null>(null);
-  const surveyNumber = useRef(0);
 
   useEffect(() => {
     const init = async () => {
@@ -22,7 +20,6 @@ const useGetQuestions = () => {
           id: doc.id,
         }));
         setSurveys(results);
-        setCurrentSurvey(results[surveyNumber.current]);
       } catch (err) {
         setError('An error occurred while retrieving surveys');
       } finally {
@@ -33,19 +30,11 @@ const useGetQuestions = () => {
     init();
   }, []);
 
-  const getNextSurvey = useCallback(() => {
-    surveyNumber.current += 1;
-    setCurrentSurvey(surveys[surveyNumber.current]);
-  }, [surveys]);
-
   return {
     loading,
     error,
-    currentSurvey,
-    getNextSurvey,
-    surveyNumber,
-    totalNumberOfQuestons: surveys.length,
+    surveys,
   };
 };
 
-export default useGetQuestions;
+export default useGetSurveys;

@@ -10,4 +10,4 @@ const app = initializeApp({
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 });
-export const firestore = getFirestore(app);
+export const db = getFirestore(app);
