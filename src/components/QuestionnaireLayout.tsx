@@ -8,7 +8,13 @@ interface QuestionnaireLayoutProps {
 const QuestionnaireLayout = ({ children }: QuestionnaireLayoutProps) => {
   return (
     <BaseLayout title="Questionnaire">
-      <Stack padding={8} height="100vh">
+      <Stack
+        padding={8}
+        height="100vh"
+        justifyContent="center"
+        alignItems="center"
+        bgGradient="linear(to-bl, green.200, pink.500)"
+      >
         {children}
       </Stack>
     </BaseLayout>
