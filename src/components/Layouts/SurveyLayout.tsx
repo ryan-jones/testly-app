@@ -2,12 +2,12 @@ import { Box, Stack } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import BaseLayout from './BaseLayout';
 
-interface QuestionnaireLayoutProps {
+interface SurveyLayoutProps {
   children: ReactNode;
 }
-const QuestionnaireLayout = ({ children }: QuestionnaireLayoutProps) => {
+const SurveyLayout = ({ children }: SurveyLayoutProps) => {
   return (
-    <BaseLayout title="Questionnaire">
+    <BaseLayout title="Survey">
       <Stack
         padding={8}
         height="100vh"
@@ -21,4 +21,4 @@ const QuestionnaireLayout = ({ children }: QuestionnaireLayoutProps) => {
   );
 };
 
-export default QuestionnaireLayout;
+export default SurveyLayout;

@@ -1,4 +1,4 @@
-import BaseLayout from '@/components/BaseLayout';
+import BaseLayout from '@/components/Layouts/BaseLayout';
 import useGetSurveys from '@/hooks/useGetSurveys';
 import { Survey } from '@/types/surveys';
 import {

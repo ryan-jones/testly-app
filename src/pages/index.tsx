@@ -1,4 +1,4 @@
-import BaseLayout from '@/components/BaseLayout';
+import BaseLayout from '@/components/Layouts/BaseLayout';
 import { Button, Heading, Stack, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
 

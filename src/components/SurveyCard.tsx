@@ -50,11 +50,16 @@ const SurveyCard = ({
             }))}
           />
           {isLastQuestion ? (
-            <Button isDisabled={!selectedAnswer} onClick={onClickSubmit}>
+            <Button
+              isDisabled={!selectedAnswer}
+              onClick={onClickSubmit}
+              colorScheme="green"
+            >
               Submit your answers
             </Button>
           ) : (
             <Button
+              colorScheme="blue"
               isDisabled={!selectedAnswer}
               onClick={() => onClickNext(Number(selectedAnswer))}
             >

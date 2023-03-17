@@ -17,86 +17,84 @@ import { FieldArray, FieldArrayRenderProps } from 'formik';
 import { InputControl } from 'formik-chakra-ui';
 import SurveyQuestionOption from './SurveyQuestionOption';
 
-const SurveyQuestions = ({ surveyQuestions }: any) => {
+interface SurveyQuestionsProps {
+  surveyQuestions: SurveyQuestion[];
+}
+const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
   return (
-    <Stack>
-      <Text>Survey Questions</Text>
-      <FieldArray
-        name="surveyQuestions"
-        render={(arrayHelpers: FieldArrayRenderProps) => (
-          <>
-            <Accordion allowToggle>
-              {surveyQuestions?.map((sq: SurveyQuestion, sqIndex: number) => (
-                <AccordionItem key={sqIndex}>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      {sqIndex + 1}: {sq.question}
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel>
-                    <Stack spacing={4}>
-                      <HStack alignItems="flex-end">
-                        <InputControl
-                          label="Survey Question"
-                          name={`surveyQuestions[${sqIndex}].question`}
-                        />
-                        <IconButton
-                          aria-label="Delete question"
-                          onClick={() => arrayHelpers.remove(sqIndex)}
-                          icon={<DeleteIcon />}
-                        />
-                      </HStack>
-                      <FieldArray
-                        name={`surveyQuestions[${sqIndex}].options`}
-                        render={(sqArrayHelpers: FieldArrayRenderProps) => (
-                          <>
-                            {sq.options.map(
-                              (_: SurveyOption, index: number) => (
-                                <SurveyQuestionOption
-                                  key={index}
-                                  nameField={`surveyQuestions[${sqIndex}].options[${index}]`}
-                                  onClickDelete={() => {
-                                    sqArrayHelpers.remove(index);
-                                  }}
-                                />
-                              )
-                            )}
-                            <Button
-                              width="25%"
-                              alignSelf="flex-end"
-                              onClick={() =>
-                                sqArrayHelpers.push({
-                                  answer: '',
-                                  weighting: 0,
-                                })
-                              }
-                            >
-                              Add option
-                            </Button>
-                          </>
-                        )}
+    <FieldArray
+      name="surveyQuestions"
+      render={(arrayHelpers: FieldArrayRenderProps) => (
+        <Stack spacing={8}>
+          <Accordion allowToggle>
+            {surveyQuestions?.map((sq: SurveyQuestion, sqIndex: number) => (
+              <AccordionItem key={sqIndex}>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    {sqIndex + 1}: {sq.question}
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel>
+                  <Stack spacing={4}>
+                    <HStack alignItems="flex-end">
+                      <InputControl
+                        label="Survey Question"
+                        name={`surveyQuestions[${sqIndex}].question`}
                       />
-                    </Stack>
-                  </AccordionPanel>
-                </AccordionItem>
-              ))}
-            </Accordion>
-            <Button
-              colorScheme="blue"
-              onClick={() =>
-                arrayHelpers.push({
-                  question: '',
-                  options: [],
-                })
-              }
-            >
-              Add a question
-            </Button>
-          </>
-        )}
-      />
-    </Stack>
+                      <IconButton
+                        aria-label="Delete question"
+                        onClick={() => arrayHelpers.remove(sqIndex)}
+                        icon={<DeleteIcon />}
+                      />
+                    </HStack>
+                    <FieldArray
+                      name={`surveyQuestions[${sqIndex}].options`}
+                      render={(sqArrayHelpers: FieldArrayRenderProps) => (
+                        <>
+                          {sq.options.map((_: SurveyOption, index: number) => (
+                            <SurveyQuestionOption
+                              key={index}
+                              nameField={`surveyQuestions[${sqIndex}].options[${index}]`}
+                              onClickDelete={() => {
+                                sqArrayHelpers.remove(index);
+                              }}
+                            />
+                          ))}
+                          <Button
+                            width="25%"
+                            alignSelf="flex-end"
+                            onClick={() =>
+                              sqArrayHelpers.push({
+                                answer: '',
+                                weighting: 0,
+                              })
+                            }
+                          >
+                            Add option
+                          </Button>
+                        </>
+                      )}
+                    />
+                  </Stack>
+                </AccordionPanel>
+              </AccordionItem>
+            ))}
+          </Accordion>
+          <Button
+            colorScheme="blue"
+            onClick={() =>
+              arrayHelpers.push({
+                question: '',
+                options: [],
+              })
+            }
+          >
+            Add a question
+          </Button>
+        </Stack>
+      )}
+    />
   );
 };
 

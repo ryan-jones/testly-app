@@ -1,25 +1,37 @@
-import BaseLayout from '@/components/BaseLayout';
-import { Button, Card, Stack } from '@chakra-ui/react';
+import BaseLayout from '@/components/Layouts/BaseLayout';
+import {
+  Button,
+  Card,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@chakra-ui/react';
 import { db } from '../../firebase';
 import { setDoc, doc, collection, addDoc } from '@firebase/firestore';
 import { useRef } from 'react';
-import { SurveyQuestion } from '@/types/surveys';
+import { SurveyQuestion, SurveyResult } from '@/types/surveys';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import SurveyName from '@/components/SurveyForm/SurveyName';
 import SurveyQuestions from '@/components/SurveyForm/SurveyQuestions';
 import useGetSurveys from '@/hooks/useGetSurveys';
+import SurveyResults from '@/components/SurveyForm/SurveyResults';
 
 export interface SurveyFormValues {
   id: string;
   surveyName: string;
   surveyQuestions: SurveyQuestion[];
+  surveyResults: SurveyResult[];
 }
 
 const initialValues: SurveyFormValues = {
   id: '',
   surveyName: '',
   surveyQuestions: [],
+  surveyResults: [],
 };
 
 const surveyFormSchema = Yup.object({
@@ -33,6 +45,12 @@ const surveyFormSchema = Yup.object({
           weighting: Yup.number().required(),
         })
       ),
+    })
+  ),
+  surveyResults: Yup.array().of(
+    Yup.object().shape({
+      header: Yup.string().required(),
+      body: Yup.string().required(),
     })
   ),
 });
@@ -76,7 +94,22 @@ const AdminPage = () => {
               <Card padding={4}>
                 <Stack spacing={4}>
                   <SurveyName surveys={surveys} />
-                  <SurveyQuestions surveyQuestions={values.surveyQuestions} />
+                  <Tabs>
+                    <TabList>
+                      <Tab>Survey Questions</Tab>
+                      <Tab>Survey Results</Tab>
+                    </TabList>
+                    <TabPanels>
+                      <TabPanel>
+                        <SurveyQuestions
+                          surveyQuestions={values.surveyQuestions}
+                        />
+                      </TabPanel>
+                      <TabPanel>
+                        <SurveyResults surveyResults={values.surveyResults} />
+                      </TabPanel>
+                    </TabPanels>
+                  </Tabs>
                 </Stack>
               </Card>
               <Button

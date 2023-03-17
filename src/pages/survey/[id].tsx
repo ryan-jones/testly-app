@@ -1,5 +1,5 @@
 import SurveyCard from '@/components/SurveyCard';
-import QuestionnaireLayout from '@/components/QuestionnaireLayout';
+import SurveyLayout from '@/components/Layouts/SurveyLayout';
 import useGetQuestions from '@/hooks/useGetQuestions';
 import { Survey } from '@/types/surveys';
 import { Stack, Text } from '@chakra-ui/react';
@@ -18,7 +18,7 @@ const SurveyPage = ({
   };
 
   return (
-    <QuestionnaireLayout>
+    <SurveyLayout>
       <Stack
         spacing={8}
         padding={4}
@@ -37,7 +37,7 @@ const SurveyPage = ({
           {`Question ${questionNumber} of ${survey.surveyQuestions.length}`}
         </Text>
       </Stack>
-    </QuestionnaireLayout>
+    </SurveyLayout>
   );
 };
 
