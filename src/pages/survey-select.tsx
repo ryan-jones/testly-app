@@ -5,14 +5,15 @@ import {
   Button,
   Card,
   Heading,
+  LinkOverlay,
   SimpleGrid,
   Spinner,
   Stack,
+  Text,
 } from '@chakra-ui/react';
 
 const SurveySelectPage = () => {
   const { surveys, loading, error } = useGetSurveys();
-
   return (
     <BaseLayout title="Survey Select">
       <Stack spacing={12} height="100vh" alignItems="center" padding={12}>
@@ -32,7 +33,10 @@ const SurveySelectPage = () => {
                 justifyContent="center"
                 alignItems="center"
               >
-                <Heading color="white">{survey.surveyName}</Heading>
+                <LinkOverlay key={survey.id} href={`/survey/${survey.id}`}>
+                  <Heading color="white">{survey.surveyName}</Heading>
+                  <Text>{survey.id}</Text>
+                </LinkOverlay>
               </Card>
             ))}
           </SimpleGrid>

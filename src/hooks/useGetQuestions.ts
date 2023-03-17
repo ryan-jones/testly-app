@@ -1,50 +1,29 @@
-import { db } from '../../firebase';
-import { collection, query, getDocs } from '@firebase/firestore';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Survey } from '@/types/surveys';
+import { useCallback, useRef, useState } from 'react';
+import { SurveyQuestion } from '@/types/surveys';
 
-const surveysCollection = collection(db, 'surveys');
+const useGetQuestions = (surveyQuestions: SurveyQuestion[]) => {
+  const [currentQuestion, setCurrentQuestion] = useState<SurveyQuestion>(
+    surveyQuestions[0]
+  );
+  const [totalWeighting, setTotalWeighting] = useState(0);
 
-const useGetQuestions = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [surveys, setSurveys] = useState<Survey[]>([]);
-  const [currentSurvey, setCurrentSurvey] = useState<Survey | null>(null);
-  const surveyNumber = useRef(0);
+  const questionNumber = useRef(0);
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const surveysQuery = query(surveysCollection);
-        const querySnapshot = await getDocs(surveysQuery);
-        const results: Survey[] = querySnapshot.docs.map((doc) => ({
-          ...(doc.data() as Omit<Survey, 'id'>),
-          id: doc.id,
-        }));
-        setSurveys(results);
-        setCurrentSurvey(results[surveyNumber.current]);
-      } catch (err) {
-        setError('An error occurred while retrieving surveys');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const getNextQuestion = useCallback(
+    (weighting: number) => {
+      setTotalWeighting((prev) => prev + weighting);
 
-    init();
-  }, []);
-
-  const getNextSurvey = useCallback(() => {
-    surveyNumber.current += 1;
-    setCurrentSurvey(surveys[surveyNumber.current]);
-  }, [surveys]);
+      questionNumber.current += 1;
+      setCurrentQuestion(surveyQuestions[questionNumber.current]);
+    },
+    [surveyQuestions]
+  );
 
   return {
-    loading,
-    error,
-    currentSurvey,
-    getNextSurvey,
-    surveyNumber,
-    totalNumberOfQuestons: surveys.length,
+    currentQuestion,
+    questionNumber: questionNumber.current + 1,
+    getNextQuestion,
+    totalWeighting,
   };
 };
 

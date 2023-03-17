@@ -1,4 +1,4 @@
-import { Answer } from '@/types/questions';
+import { SurveyOption } from '@/types/surveys';
 import {
   Button,
   Card,
@@ -11,23 +11,23 @@ import {
 import { useState } from 'react';
 import RadioButtonGroup from './RadioButtonGroup';
 
-interface QuestionnaireCardProps {
+interface SurveyCardProps {
   question: string;
-  answers: Answer[];
+  options: SurveyOption[];
   onClickNext: (weighting: number) => void;
   onClickSubmit: () => void;
   isLastQuestion?: boolean;
 }
-const QuestionnaireCard = ({
+const SurveyCard = ({
   question,
-  answers,
+  options,
   onClickNext,
   onClickSubmit,
   isLastQuestion,
-}: QuestionnaireCardProps) => {
+}: SurveyCardProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string>('');
 
-  const handleAnswerSelect = (value: string) => {
+  const handleOptionSelect = (value: string) => {
     setSelectedAnswer(value);
   };
 
@@ -42,16 +42,16 @@ const QuestionnaireCard = ({
       <CardBody>
         <Stack spacing={8}>
           <RadioButtonGroup
-            onChange={handleAnswerSelect}
+            onChange={handleOptionSelect}
             value={selectedAnswer}
-            options={answers.map((answerOption: Answer) => ({
+            options={options.map((answerOption: SurveyOption) => ({
               label: answerOption.answer,
               value: answerOption.weighting.toString(),
             }))}
           />
           {isLastQuestion ? (
             <Button isDisabled={!selectedAnswer} onClick={onClickSubmit}>
-              Find out your personality
+              Submit your answers
             </Button>
           ) : (
             <Button
@@ -67,4 +67,4 @@ const QuestionnaireCard = ({
   );
 };
 
-export default QuestionnaireCard;
+export default SurveyCard;
