@@ -1,5 +1,5 @@
-import { SurveyFormProps } from '@/pages/admin';
 import { SurveyOption, SurveyQuestion } from '@/types/surveys';
+import { DeleteIcon } from '@chakra-ui/icons';
 import {
   Accordion,
   AccordionButton,
@@ -8,10 +8,9 @@ import {
   AccordionPanel,
   Box,
   Button,
-  Heading,
   HStack,
+  IconButton,
   Stack,
-  StackDivider,
   Text,
 } from '@chakra-ui/react';
 import { FieldArray, FieldArrayRenderProps } from 'formik';
@@ -37,10 +36,17 @@ const SurveyQuestions = ({ surveyQuestions }: any) => {
                   </AccordionButton>
                   <AccordionPanel>
                     <Stack spacing={4}>
-                      <InputControl
-                        label="Survey Question"
-                        name={`surveyQuestions[${sqIndex}].question`}
-                      />
+                      <HStack alignItems="flex-end">
+                        <InputControl
+                          label="Survey Question"
+                          name={`surveyQuestions[${sqIndex}].question`}
+                        />
+                        <IconButton
+                          aria-label="Delete question"
+                          onClick={() => arrayHelpers.remove(sqIndex)}
+                          icon={<DeleteIcon />}
+                        />
+                      </HStack>
                       <FieldArray
                         name={`surveyQuestions[${sqIndex}].options`}
                         render={(sqArrayHelpers: FieldArrayRenderProps) => (
@@ -77,6 +83,7 @@ const SurveyQuestions = ({ surveyQuestions }: any) => {
               ))}
             </Accordion>
             <Button
+              colorScheme="blue"
               onClick={() =>
                 arrayHelpers.push({
                   question: '',

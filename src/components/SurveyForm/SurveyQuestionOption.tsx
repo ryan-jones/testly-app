@@ -1,6 +1,5 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Box, HStack, IconButton } from '@chakra-ui/react';
-import { FieldArrayRenderProps } from 'formik';
 import { InputControl } from 'formik-chakra-ui';
 
 interface SurveyQuestionOptionProps {

@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import BaseLayout from '@/components/BaseLayout';
 import { Button, Heading, Stack, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';

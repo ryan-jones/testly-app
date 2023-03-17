@@ -24,6 +24,17 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
     }
   };
 
+  const onSelectSurveyChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedSurvey = surveys.find(
+      (survey) => survey.surveyName === e.target.value
+    );
+    if (selectedSurvey) {
+      setFieldValue('id', selectedSurvey.id);
+      setFieldValue('surveyName', selectedSurvey.surveyName);
+      setFieldValue('surveyQuestions', selectedSurvey.surveyQuestions);
+    }
+  };
+
   return (
     <>
       <FormControl display="flex" alignItems="center">
@@ -40,7 +51,11 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
       {isNewSurvey ? (
         <InputControl label="Survey Name" name="surveyName" />
       ) : (
-        <SelectControl name="surveyName" label="Select Survey">
+        <SelectControl
+          name="surveyName"
+          label="Select Survey"
+          onChange={onSelectSurveyChange}
+        >
           {surveys.map((survey: Survey) => (
             <option key={survey.id} value={survey.id}>
               {survey.surveyName}

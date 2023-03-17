@@ -83,6 +83,7 @@ const AdminPage = () => {
                 type="submit"
                 onClick={submitForm}
                 isLoading={isSubmitting}
+                colorScheme="green"
               >
                 Upload Survey
               </Button>
