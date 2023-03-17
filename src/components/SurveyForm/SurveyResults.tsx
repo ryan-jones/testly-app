@@ -28,7 +28,7 @@ const SurveyResults = ({ surveyResults }: SurveyResultsProps) => {
               <AccordionItem key={srIndex}>
                 <AccordionButton>
                   <Box as="span" flex="1" textAlign="left">
-                    {srIndex + 1}: {sr.title}
+                    {srIndex + 1}: {sr.header}
                   </Box>
 
                   <AccordionIcon />

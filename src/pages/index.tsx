@@ -21,10 +21,12 @@ export default function Home() {
         </Stack>
         <Link
           as={NextLink}
-          href="/questionnaire"
+          href="/survey-select"
           style={{ textDecoration: 'none' }}
         >
-          <Button>Get Started</Button>
+          <Button as="span" colorScheme="blue">
+            Get Started
+          </Button>
         </Link>
       </Stack>
     </BaseLayout>

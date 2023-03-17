@@ -9,7 +9,6 @@ const RadioButton = ({ children, ...rest }: RadioButtonProps) => {
 
   const inputProps = getInputProps();
   const checkboxProps = getCheckboxProps();
-
   return (
     <Box as="label">
       <input {...inputProps} />

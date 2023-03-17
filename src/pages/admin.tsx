@@ -12,13 +12,14 @@ import {
 import { db } from '../../firebase';
 import { setDoc, doc, collection, addDoc } from '@firebase/firestore';
 import { useRef } from 'react';
-import { SurveyQuestion, SurveyResult } from '@/types/surveys';
+import { Survey, SurveyQuestion, SurveyResult } from '@/types/surveys';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import SurveyName from '@/components/SurveyForm/SurveyName';
 import SurveyQuestions from '@/components/SurveyForm/SurveyQuestions';
-import useGetSurveys from '@/hooks/useGetSurveys';
 import SurveyResults from '@/components/SurveyForm/SurveyResults';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import { getDocs, query } from 'firebase/firestore';
 
 export interface SurveyFormValues {
   id: string;
@@ -55,8 +56,9 @@ const surveyFormSchema = Yup.object({
   ),
 });
 
-const AdminPage = () => {
-  const { surveys, loading, error } = useGetSurveys();
+const AdminPage = ({
+  surveys,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const formRef = useRef<FormikProps<SurveyFormValues>>(null);
 
   const uploadSurvey = async (formData: SurveyFormValues) => {
@@ -73,7 +75,6 @@ const AdminPage = () => {
       console.log('error', error);
     }
   };
-
   return (
     <BaseLayout title="Admin">
       <Stack
@@ -128,4 +129,21 @@ const AdminPage = () => {
   );
 };
 
+export const getStaticProps: GetStaticProps<{
+  surveys: Survey[];
+}> = async () => {
+  const surveysCollection = collection(db, 'surveys');
+  const surveysQuery = query(surveysCollection);
+  const querySnapshot = await getDocs(surveysQuery);
+  const surveys: Survey[] = querySnapshot.docs.map((doc) => ({
+    ...(doc.data() as Omit<Survey, 'id'>),
+    id: doc.id,
+  }));
+
+  return {
+    props: {
+      surveys,
+    },
+  };
+};
 export default AdminPage;

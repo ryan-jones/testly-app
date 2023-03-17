@@ -21,6 +21,7 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
       setFieldValue('id', surveys[0].id);
       setFieldValue('surveyName', surveys[0].surveyName);
       setFieldValue('surveyQuestions', surveys[0].surveyQuestions);
+      setFieldValue('surveyResults', surveys[0].surveyResults);
     }
   };
 
@@ -32,9 +33,9 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
       setFieldValue('id', selectedSurvey.id);
       setFieldValue('surveyName', selectedSurvey.surveyName);
       setFieldValue('surveyQuestions', selectedSurvey.surveyQuestions);
+      setFieldValue('surveyResults', selectedSurvey.surveyResults);
     }
   };
-
   return (
     <>
       <FormControl display="flex" alignItems="center">

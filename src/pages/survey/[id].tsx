@@ -1,21 +1,25 @@
-import SurveyCard from '@/components/SurveyCard';
+import SurveyQuestionsCard from '@/components/SurveyQuestionsCard';
 import SurveyLayout from '@/components/Layouts/SurveyLayout';
-import useGetQuestions from '@/hooks/useGetQuestions';
+import useSurvey from '@/hooks/useSurvey';
 import { Survey } from '@/types/surveys';
 import { Stack, Text } from '@chakra-ui/react';
 import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { db } from '../../../firebase';
+import SurveyResultCard from '@/components/SurveyResultCard';
 
 const SurveyPage = ({
   survey,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { currentQuestion, questionNumber, getNextQuestion, totalWeighting } =
-    useGetQuestions(survey.surveyQuestions);
-
-  const onClickSubmit = () => {
-    console.log('totalWeighting', totalWeighting);
-  };
+  const {
+    currentQuestion,
+    questionNumber,
+    getNextQuestion,
+    getPreviousQuestion,
+    getResult,
+    surveyResult,
+    currentAnswer,
+  } = useSurvey(survey);
 
   return (
     <SurveyLayout>
@@ -26,16 +30,25 @@ const SurveyPage = ({
         justifyContent="center"
         alignItems="center"
       >
-        <SurveyCard
-          question={currentQuestion.question}
-          options={currentQuestion.options}
-          onClickNext={(weighting: number) => getNextQuestion(weighting)}
-          onClickSubmit={onClickSubmit}
-          isLastQuestion={questionNumber === survey.surveyQuestions.length}
-        />
-        <Text textColor="white">
-          {`Question ${questionNumber} of ${survey.surveyQuestions.length}`}
-        </Text>
+        {surveyResult ? (
+          <SurveyResultCard result={surveyResult} />
+        ) : (
+          <>
+            <SurveyQuestionsCard
+              question={currentQuestion.question}
+              options={currentQuestion.options}
+              onClickNext={(weighting: number) => getNextQuestion(weighting)}
+              onClickPrevious={() => getPreviousQuestion()}
+              onClickSubmit={getResult}
+              isFirstQuestion={questionNumber === 1}
+              isLastQuestion={questionNumber === survey.surveyQuestions.length}
+              defaultSelectedAnswer={currentAnswer}
+            />
+            <Text textColor="white">
+              {`Question ${questionNumber} of ${survey.surveyQuestions.length}`}
+            </Text>
+          </>
+        )}
       </Stack>
     </SurveyLayout>
   );
