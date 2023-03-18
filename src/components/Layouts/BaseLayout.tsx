@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import Head from 'next/head';
 import { ReactNode } from 'react';
+import Navbar from '../Navbar';
 
 const siteTitle = 'Personality Test';
 
@@ -22,7 +23,10 @@ const BaseLayout = ({ children, title }: BaseLayoutProps) => {
         />
         <meta name="og:title" content={siteTitle} />
       </Head>
-      <main>{children}</main>
+      <main>
+        <Navbar />
+        {children}
+      </main>
     </Box>
   );
 };

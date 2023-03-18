@@ -3,9 +3,8 @@ import SurveyLayout from '@/components/Layouts/SurveyLayout';
 import useSurvey from '@/hooks/useSurvey';
 import { Survey } from '@/types/surveys';
 import { Stack, Text } from '@chakra-ui/react';
-import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { db } from '../../../firebase';
+import { getAllSurveyIds, getSurvey } from '../../../firebase';
 import SurveyResultCard from '@/components/SurveyResultCard';
 
 const SurveyPage = ({
@@ -55,12 +54,10 @@ const SurveyPage = ({
 };
 
 export const getStaticPaths = async () => {
-  const surveysRef = collection(db, 'surveys');
-  const surveyQuery = query(surveysRef);
-  const querySnapshot = await getDocs(surveyQuery);
+  const pathIds = await getAllSurveyIds();
 
   return {
-    paths: querySnapshot.docs.map((doc) => ({ params: { id: doc.id } })),
+    paths: pathIds.map((id) => ({ params: { id } })),
     fallback: false,
   };
 };
@@ -68,13 +65,8 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<{
   survey: Survey;
 }> = async ({ params }) => {
-  if (params?.id) {
-    const surveyRef = doc(db, 'surveys', params.id as string);
-    const querySnapshot = await getDoc(surveyRef);
-    const survey = {
-      ...(querySnapshot.data() as Omit<Survey, 'id'>),
-      id: querySnapshot.id,
-    };
+  if (params?.id && typeof params.id === 'string') {
+    const survey = await getSurvey(params.id);
 
     return {
       props: {

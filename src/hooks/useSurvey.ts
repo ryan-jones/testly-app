@@ -6,24 +6,23 @@ const useSurvey = (survey: Survey) => {
   const [currentQuestion, setCurrentQuestion] = useState<SurveyQuestion>(
     survey.surveyQuestions[0]
   );
+  const questionNumberRef = useRef(0);
 
   const answers = useMemo(() => new Map(), []);
 
-  const questionNumber = useRef(0);
-
   const getNextQuestion = useCallback(
     (answer: number) => {
-      answers.set(questionNumber.current, answer);
-      questionNumber.current += 1;
-      setCurrentQuestion(survey.surveyQuestions[questionNumber.current]);
+      answers.set(questionNumberRef.current, answer);
+      questionNumberRef.current += 1;
+      setCurrentQuestion(survey.surveyQuestions[questionNumberRef.current]);
     },
     [survey.surveyQuestions, answers]
   );
 
   const getPreviousQuestion = useCallback(() => {
-    answers.set(questionNumber.current, 0);
-    questionNumber.current -= 1;
-    setCurrentQuestion(survey.surveyQuestions[questionNumber.current]);
+    answers.set(questionNumberRef.current, 0);
+    questionNumberRef.current -= 1;
+    setCurrentQuestion(survey.surveyQuestions[questionNumberRef.current]);
   }, [survey.surveyQuestions, answers]);
 
   const getResult = useCallback(() => {
@@ -44,8 +43,8 @@ const useSurvey = (survey: Survey) => {
 
   return {
     currentQuestion,
-    currentAnswer: answers.get(questionNumber.current)?.toString() || '',
-    questionNumber: questionNumber.current + 1,
+    currentAnswer: answers.get(questionNumberRef.current)?.toString() || '',
+    questionNumber: questionNumberRef.current + 1,
     getNextQuestion,
     getPreviousQuestion,
     getResult,

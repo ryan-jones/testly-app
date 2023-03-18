@@ -9,8 +9,6 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react';
-import { db } from '../../firebase';
-import { setDoc, doc, collection, addDoc } from '@firebase/firestore';
 import { useRef } from 'react';
 import { Survey, SurveyQuestion, SurveyResult } from '@/types/surveys';
 import { Formik, FormikProps } from 'formik';
@@ -19,7 +17,7 @@ import SurveyName from '@/components/SurveyForm/SurveyName';
 import SurveyQuestions from '@/components/SurveyForm/SurveyQuestions';
 import SurveyResults from '@/components/SurveyForm/SurveyResults';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { getDocs, query } from 'firebase/firestore';
+import { createSurvey, getAllSurveys, updateSurvey } from '../../firebase';
 
 export interface SurveyFormValues {
   id: string;
@@ -64,12 +62,9 @@ const AdminPage = ({
   const uploadSurvey = async (formData: SurveyFormValues) => {
     try {
       if (formData.id) {
-        const selectedSurveyRef = doc(db, 'surveys', formData.id);
-        await setDoc(selectedSurveyRef, formData as Record<string, any>);
+        updateSurvey(formData);
       } else {
-        const collectionRef = collection(db, 'surveys');
-        const { id, ...rest } = formData;
-        await addDoc(collectionRef, rest);
+        createSurvey(formData);
       }
     } catch (error) {
       console.log('error', error);
@@ -82,7 +77,7 @@ const AdminPage = ({
         height="100vh"
         justifyContent="center"
         alignItems="center"
-        background="blackAlpha.50"
+        bgGradient="linear(to-bl, blue.200, blue.400)"
       >
         <Formik
           innerRef={formRef}
@@ -132,13 +127,7 @@ const AdminPage = ({
 export const getStaticProps: GetStaticProps<{
   surveys: Survey[];
 }> = async () => {
-  const surveysCollection = collection(db, 'surveys');
-  const surveysQuery = query(surveysCollection);
-  const querySnapshot = await getDocs(surveysQuery);
-  const surveys: Survey[] = querySnapshot.docs.map((doc) => ({
-    ...(doc.data() as Omit<Survey, 'id'>),
-    id: doc.id,
-  }));
+  const surveys: Survey[] = await getAllSurveys();
 
   return {
     props: {
