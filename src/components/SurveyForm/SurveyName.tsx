@@ -1,4 +1,4 @@
-import { SurveyFormValues } from '@/pages/admin';
+import { SurveyFormValues } from '@/pages/dashboard';
 import { Survey } from '@/types/surveys';
 import { FormControl, FormLabel, Switch } from '@chakra-ui/react';
 import { FormikContextType, useFormikContext } from 'formik';
@@ -17,7 +17,12 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
   const onToggleNewSurvey = (e: ChangeEvent<HTMLInputElement>) => {
     setIsNewSurvey(e.target.checked);
 
-    if (!e.target.checked) {
+    if (e.target.checked) {
+      setFieldValue('id', '');
+      setFieldValue('surveyName', '');
+      setFieldValue('surveyQuestions', []);
+      setFieldValue('surveyResults', []);
+    } else {
       setFieldValue('id', surveys[0].id);
       setFieldValue('surveyName', surveys[0].surveyName);
       setFieldValue('surveyQuestions', surveys[0].surveyQuestions);
@@ -27,7 +32,7 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
 
   const onSelectSurveyChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedSurvey = surveys.find(
-      (survey) => survey.surveyName === e.target.value
+      (survey) => survey.id === e.target.value
     );
     if (selectedSurvey) {
       setFieldValue('id', selectedSurvey.id);

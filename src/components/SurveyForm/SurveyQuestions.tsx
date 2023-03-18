@@ -28,7 +28,7 @@ const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
         <Stack spacing={8}>
           <Accordion allowToggle>
             {surveyQuestions?.map((sq: SurveyQuestion, sqIndex: number) => (
-              <AccordionItem key={`${sq.question}=${sqIndex}`}>
+              <AccordionItem key={sqIndex}>
                 <AccordionButton>
                   <Box as="span" flex="1" textAlign="left">
                     {sqIndex + 1}: {sq.question}
@@ -54,7 +54,7 @@ const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
                         <>
                           {sq.options.map((_: SurveyOption, index: number) => (
                             <SurveyQuestionOption
-                              key={`${_.answer}-${index}`}
+                              key={index}
                               nameField={`surveyQuestions[${sqIndex}].options[${index}]`}
                               onClickDelete={() => {
                                 sqArrayHelpers.remove(index);

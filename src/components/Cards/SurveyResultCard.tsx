@@ -1,3 +1,4 @@
+import { Page } from '@/types/pages';
 import { SurveyResult } from '@/types/surveys';
 import {
   Button,
@@ -24,7 +25,7 @@ const SurveyResultCard = ({ result }: SurveyResultCardProps) => {
       <CardBody>
         <Stack spacing={8}>
           <Text>{result.body}</Text>
-          <NextLink href="/" passHref>
+          <NextLink href={Page.Home} passHref>
             <Button as="span" colorScheme="blue">
               Return to Home Screen
             </Button>

@@ -6,11 +6,10 @@ import {
   CardHeader,
   Divider,
   Heading,
-  HStack,
   Stack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import RadioButtonGroup from './RadioButtonGroup';
+import RadioButtonGroup from '../RadioButtonGroup';
 
 interface SurveyQuestionsCardProps {
   question: string;
@@ -46,7 +45,7 @@ const SurveyQuestionsCard = ({
   };
 
   return (
-    <Card width={{ base: '100%', xl: '65%' }} padding={4}>
+    <Card width={{ base: '100%', md: '60%' }} padding={4}>
       <CardHeader>
         <Heading as="h1" size="lg">
           {question}
@@ -64,7 +63,10 @@ const SurveyQuestionsCard = ({
               value: answerOption.weighting.toString(),
             }))}
           />
-          <HStack justifyContent="flex-end">
+          <Stack
+            justifyContent="flex-end"
+            direction={{ base: 'column', sm: 'row' }}
+          >
             {!isFirstQuestion && (
               <Button
                 variant="outline"
@@ -95,7 +97,7 @@ const SurveyQuestionsCard = ({
                 Next question
               </Button>
             )}
-          </HStack>
+          </Stack>
         </Stack>
       </CardBody>
     </Card>

@@ -1,5 +1,8 @@
 export enum Page {
   Home = '/',
-  Admin = '/admin',
+  Dashboard = '/dashboard',
+  MySurveys = '/dashboard/surveys',
   Survey = '/survey',
+  Login = '/login',
+  Signup = '/signup',
 }

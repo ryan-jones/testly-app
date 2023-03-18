@@ -1,4 +1,4 @@
-import { Box, Flex, Show, Stack } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { useState } from 'react';
 import Logo from './Logo';
 import MenuList from './MenuList';
@@ -13,13 +13,13 @@ const Navbar = () => {
       position="sticky"
       top={0}
       zIndex={1000}
-      align="center"
-      justify="space-between"
+      alignItems="center"
+      justifyContent="space-between"
       wrap="wrap"
-      w="100%"
-      p={8}
-      bg={{ base: 'green.500', md: 'white' }}
-      color={{ base: 'white', md: 'green.500' }}
+      width="100%"
+      padding={8}
+      background="white"
+      color="blue.600"
       boxShadow="0 2px 2px -2px rgba(0,0,0,.2)"
     >
       <Logo />

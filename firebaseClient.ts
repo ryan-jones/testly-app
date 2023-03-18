@@ -1,6 +1,9 @@
-import { SurveyFormValues } from '@/pages/admin';
+import { SurveyFormValues } from '@/pages/dashboard/surveys';
 import { Survey } from '@/types/surveys';
+import { UserProfile } from '@/types/user';
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+
 import {
   addDoc,
   collection,
@@ -12,6 +15,7 @@ import {
   query,
   QuerySnapshot,
   setDoc,
+  where,
 } from 'firebase/firestore';
 
 const app = initializeApp({
@@ -23,13 +27,28 @@ const app = initializeApp({
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 });
+
+export const auth = getAuth();
+
 const db = getFirestore(app);
 
-const getSurveySnapshot = async (): Promise<QuerySnapshot<DocumentData>> => {
+const getSurveySnapshot = async (
+  uid?: string
+): Promise<QuerySnapshot<DocumentData>> => {
   const surveysCollection = collection(db, 'surveys');
-  const surveysQuery = query(surveysCollection);
+  const surveysQuery = uid
+    ? query(surveysCollection, where('createdBy', '==', uid))
+    : query(surveysCollection);
   const surveySnapshot = await getDocs(surveysQuery);
   return surveySnapshot;
+};
+
+export const getAllSurveysById = async (uid: string): Promise<Survey[]> => {
+  const surveySnapshot = await getSurveySnapshot(uid);
+  return surveySnapshot.docs.map((doc) => ({
+    ...(doc.data() as Omit<Survey, 'id'>),
+    id: doc.id,
+  }));
 };
 
 export const getAllSurveys = async (): Promise<Survey[]> => {
@@ -39,7 +58,6 @@ export const getAllSurveys = async (): Promise<Survey[]> => {
     id: doc.id,
   }));
 };
-
 export const getAllSurveyIds = async (): Promise<string[]> => {
   const surveySnapshot = await getSurveySnapshot();
   return surveySnapshot.docs.map((doc) => doc.id);
@@ -63,4 +81,18 @@ export const createSurvey = async (formData: SurveyFormValues) => {
   const collectionRef = collection(db, 'surveys');
   const { id, ...rest } = formData;
   await addDoc(collectionRef, rest);
+};
+
+export const getUserProfileById = async (uid: string): Promise<UserProfile> => {
+  const userRef = doc(db, 'users', uid);
+  const querySnapshot = await getDoc(userRef);
+  return {
+    ...(querySnapshot.data() as Omit<UserProfile, 'id'>),
+    id: querySnapshot.id,
+  };
+};
+
+export const updateUserProfile = async (userProfile: UserProfile) => {
+  const selectedUserRef = doc(db, 'users', userProfile.id);
+  await setDoc(selectedUserRef, userProfile);
 };

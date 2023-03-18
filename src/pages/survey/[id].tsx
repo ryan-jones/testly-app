@@ -1,11 +1,11 @@
-import SurveyQuestionsCard from '@/components/SurveyQuestionsCard';
-import SurveyLayout from '@/components/Layouts/SurveyLayout';
+import SurveyQuestionsCard from '@/components/Cards/SurveyQuestionsCard';
 import useSurvey from '@/hooks/useSurvey';
 import { Survey } from '@/types/surveys';
 import { Stack, Text } from '@chakra-ui/react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { getAllSurveyIds, getSurvey } from '../../../firebase';
-import SurveyResultCard from '@/components/SurveyResultCard';
+import { getAllSurveyIds, getSurvey } from '../../../firebaseClient';
+import SurveyResultCard from '@/components/Cards/SurveyResultCard';
+import BaseLayout from '@/components/Layouts/BaseLayout';
 
 const SurveyPage = ({
   survey,
@@ -21,13 +21,15 @@ const SurveyPage = ({
   } = useSurvey(survey);
 
   return (
-    <SurveyLayout>
+    <BaseLayout title="Survey">
       <Stack
-        spacing={8}
-        padding={4}
-        minHeight="50vh"
+        padding={{ base: 4, md: 8 }}
+        height="100vh"
         justifyContent="center"
         alignItems="center"
+        bgGradient="linear(to-bl, green.200, blue.600)"
+        spacing={8}
+        width="100%"
       >
         {surveyResult ? (
           <SurveyResultCard result={surveyResult} />
@@ -49,7 +51,7 @@ const SurveyPage = ({
           </>
         )}
       </Stack>
-    </SurveyLayout>
+    </BaseLayout>
   );
 };
 

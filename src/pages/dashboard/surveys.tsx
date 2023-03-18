@@ -13,11 +13,23 @@ import { useRef } from 'react';
 import { Survey, SurveyQuestion, SurveyResult } from '@/types/surveys';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
+import nookies from 'nookies';
+
 import SurveyName from '@/components/SurveyForm/SurveyName';
 import SurveyQuestions from '@/components/SurveyForm/SurveyQuestions';
 import SurveyResults from '@/components/SurveyForm/SurveyResults';
-import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { createSurvey, getAllSurveys, updateSurvey } from '../../firebase';
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
+import {
+  createSurvey,
+  getAllSurveysById,
+  updateSurvey,
+} from '../../../firebaseClient';
+import firebaseAdmin from '@/firebaseAdmin';
+import { Page } from '@/types/pages';
 
 export interface SurveyFormValues {
   id: string;
@@ -54,9 +66,9 @@ const surveyFormSchema = Yup.object({
   ),
 });
 
-const AdminPage = ({
+const UserSurveysPage = ({
   surveys,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const formRef = useRef<FormikProps<SurveyFormValues>>(null);
 
   const uploadSurvey = async (formData: SurveyFormValues) => {
@@ -74,10 +86,11 @@ const AdminPage = ({
     <BaseLayout title="Admin">
       <Stack
         spacing={12}
-        height="100vh"
-        justifyContent="center"
+        padding={12}
+        minHeight="100vh"
+        width="100%"
         alignItems="center"
-        bgGradient="linear(to-bl, blue.200, blue.400)"
+        bgGradient="radial(blackAlpha.50, blackAlpha.200)"
       >
         <Formik
           innerRef={formRef}
@@ -87,7 +100,7 @@ const AdminPage = ({
         >
           {({ isSubmitting, submitForm, values }) => (
             <Stack spacing={8} width="50%">
-              <Card padding={4}>
+              <Card padding={4} overflowY="scroll">
                 <Stack spacing={4}>
                   <SurveyName surveys={surveys} />
                   <Tabs>
@@ -114,7 +127,7 @@ const AdminPage = ({
                 isLoading={isSubmitting}
                 colorScheme="green"
               >
-                Upload Survey
+                {values.id ? 'Update Survey' : 'Upload Survey'}
               </Button>
             </Stack>
           )}
@@ -124,15 +137,29 @@ const AdminPage = ({
   );
 };
 
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   surveys: Survey[];
-}> = async () => {
-  const surveys: Survey[] = await getAllSurveys();
+}> = async (ctx: GetServerSidePropsContext) => {
+  try {
+    const cookies = nookies.get(ctx);
+    const token = await firebaseAdmin
+      .auth()
+      .verifyIdToken(cookies.firebaseToken);
 
-  return {
-    props: {
-      surveys,
-    },
-  };
+    const surveys: Survey[] = await getAllSurveysById(token.uid);
+
+    return {
+      props: {
+        surveys,
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: Page.Login,
+        permanent: false,
+      },
+    };
+  }
 };
-export default AdminPage;
+export default UserSurveysPage;

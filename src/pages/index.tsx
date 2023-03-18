@@ -1,4 +1,5 @@
 import BaseLayout from '@/components/Layouts/BaseLayout';
+import { Page } from '@/types/pages';
 import { Survey } from '@/types/surveys';
 import {
   Card,
@@ -6,10 +7,9 @@ import {
   LinkOverlay,
   SimpleGrid,
   Stack,
-  Text,
 } from '@chakra-ui/react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { getAllSurveys } from '../../firebase';
+import { getAllSurveys } from '../../firebaseClient';
 
 const SurveySelectPage = ({
   surveys,
@@ -21,11 +21,11 @@ const SurveySelectPage = ({
           spacing={12}
           height="50vh"
           alignItems="center"
-          padding={12}
+          padding={{ base: 4, md: 12 }}
           backgroundColor="blue.600"
         >
           <Stack spacing={8} alignItems="center">
-            <Heading as="h1" size="xl" color="white">
+            <Heading as="h1" size="xl" color="white" textAlign="center">
               Take online surveys and quizzes
             </Heading>
             <Heading color="white" size="lg">
@@ -40,25 +40,28 @@ const SurveySelectPage = ({
           backgroundColor="green.600"
         >
           <Card
-            width="60%"
-            maxHeight="40vh"
+            width={{ base: '100%', md: '60%' }}
+            maxHeight={{ base: 'none', md: '40vh' }}
             overflowY="scroll"
             padding={4}
             position="relative"
             zIndex={100}
             top={-40}
           >
-            <SimpleGrid columns={2} spacing={8}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
               {surveys.map((survey: Survey) => (
                 <Card
                   key={survey.id}
                   height="30vh"
                   padding={4}
-                  bgGradient="linear(to-bl, green.200, pink.500)"
+                  bgGradient="linear(to-bl, green.200, blue.600)"
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <LinkOverlay key={survey.id} href={`/survey/${survey.id}`}>
+                  <LinkOverlay
+                    key={survey.id}
+                    href={`${Page.Survey}/${survey.id}`}
+                  >
                     <Heading color="white" textAlign="center">
                       {survey.surveyName}
                     </Heading>
