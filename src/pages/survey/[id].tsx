@@ -38,7 +38,7 @@ const SurveyPage = ({
             <SurveyQuestionsCard
               question={currentQuestion.question}
               options={currentQuestion.options}
-              onClickNext={(weighting: number) => getNextQuestion(weighting)}
+              onClickNext={(points: number) => getNextQuestion(points)}
               onClickPrevious={() => getPreviousQuestion()}
               onClickSubmit={getResult}
               isFirstQuestion={questionNumber === 1}

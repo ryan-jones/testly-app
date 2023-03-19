@@ -1,6 +1,6 @@
 export interface SurveyOption {
   answer: string;
-  weighting: number;
+  points: number;
 }
 
 export interface SurveyQuestion {
@@ -11,6 +11,7 @@ export interface SurveyQuestion {
 export interface SurveyResult {
   header: string;
   body: string;
+  score: number;
 }
 
 export interface Survey {

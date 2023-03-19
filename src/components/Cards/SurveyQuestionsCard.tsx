@@ -14,7 +14,7 @@ import RadioButtonGroup from '../RadioButtonGroup';
 interface SurveyQuestionsCardProps {
   question: string;
   options: SurveyOption[];
-  onClickNext: (weighting: number) => void;
+  onClickNext: (points: number) => void;
   onClickPrevious: () => void;
   onClickSubmit: () => void;
   isFirstQuestion: boolean;
@@ -60,7 +60,7 @@ const SurveyQuestionsCard = ({
             value={selectedAnswer}
             options={options.map((answerOption: SurveyOption) => ({
               label: answerOption.answer,
-              value: answerOption.weighting.toString(),
+              value: answerOption.points.toString(),
             }))}
           />
           <Stack

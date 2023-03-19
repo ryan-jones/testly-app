@@ -26,19 +26,19 @@ const useSurvey = (survey: Survey) => {
   }, [survey.surveyQuestions, answers]);
 
   const getResult = useCallback(() => {
-    const totalWeighting = Array.from(answers.values()).reduce(
+    const totalpoints = Array.from(answers.values()).reduce(
       (sum: number, answer: number) => sum + answer,
       0
     );
-    let surveyResult: SurveyResult;
-    if (totalWeighting < 0) {
-      surveyResult = survey.surveyResults[0];
-    } else if (totalWeighting <= 3) {
-      surveyResult = survey.surveyResults[1];
-    } else {
-      surveyResult = survey.surveyResults[2];
-    }
-    setResult(surveyResult);
+    const surveyResultIndex = survey.surveyResults.findIndex(
+      (surveyResult: SurveyResult, index: number) => {
+        return (
+          totalpoints >= surveyResult.score &&
+          totalpoints < survey.surveyResults[index + 1].score
+        );
+      }
+    );
+    setResult(survey.surveyResults[surveyResultIndex]);
   }, [survey.surveyResults, answers]);
 
   return {

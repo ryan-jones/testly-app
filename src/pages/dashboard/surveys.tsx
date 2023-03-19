@@ -1,5 +1,6 @@
 import BaseLayout from '@/components/Layouts/BaseLayout';
 import {
+  Box,
   Button,
   Card,
   Stack,
@@ -23,13 +24,10 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import {
-  createSurvey,
-  getAllSurveysById,
-  updateSurvey,
-} from '../../../firebaseClient';
+import { getAllSurveysById } from '../../../firebaseClient';
 import firebaseAdmin from '@/firebaseAdmin';
 import { Page } from '@/types/pages';
+import InfoTooltip from '@/components/Notifications/InfoTooltip';
 
 export interface SurveyFormValues {
   id: string;
@@ -46,24 +44,30 @@ const initialValues: SurveyFormValues = {
 };
 
 const surveyFormSchema = Yup.object({
-  surveyName: Yup.string().required('Survey Name is required'),
-  surveyQuestions: Yup.array().of(
-    Yup.object().shape({
-      question: Yup.string().required('Question is required'),
-      options: Yup.array().of(
-        Yup.object().shape({
-          answer: Yup.string().required(),
-          weighting: Yup.number().required(),
-        })
-      ),
-    })
-  ),
-  surveyResults: Yup.array().of(
-    Yup.object().shape({
-      header: Yup.string().required(),
-      body: Yup.string().required(),
-    })
-  ),
+  surveyName: Yup.string().required('Survey Name is required.'),
+  surveyQuestions: Yup.array()
+    .of(
+      Yup.object().shape({
+        question: Yup.string().required('A question is required.'),
+        options: Yup.array().of(
+          Yup.object().shape({
+            answer: Yup.string().required(),
+            points: Yup.number().required(),
+          })
+        ),
+      })
+    )
+    .min(1, 'A survey must have at least one queston.'),
+  surveyResults: Yup.array()
+    .of(
+      Yup.object().shape({
+        header: Yup.string().required(),
+        body: Yup.string().required(),
+        score: Yup.string().required(),
+      })
+    )
+    .required()
+    .min(2, 'Each survey must have at least two results.'),
 });
 
 const UserSurveysPage = ({
@@ -72,15 +76,16 @@ const UserSurveysPage = ({
   const formRef = useRef<FormikProps<SurveyFormValues>>(null);
 
   const uploadSurvey = async (formData: SurveyFormValues) => {
-    try {
-      if (formData.id) {
-        updateSurvey(formData);
-      } else {
-        createSurvey(formData);
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
+    console.log('formData', formData);
+    // try {
+    //   if (formData.id) {
+    //     updateSurvey(formData);
+    //   } else {
+    //     createSurvey(formData);
+    //   }
+    // } catch (error) {
+    //   console.log('error', error);
+    // }
   };
   return (
     <BaseLayout title="Admin">
@@ -98,15 +103,44 @@ const UserSurveysPage = ({
           validationSchema={surveyFormSchema}
           onSubmit={uploadSurvey}
         >
-          {({ isSubmitting, submitForm, values }) => (
+          {({ isSubmitting, submitForm, values, errors, touched }) => (
             <Stack spacing={8} width="50%">
               <Card padding={4} overflowY="scroll">
                 <Stack spacing={4}>
                   <SurveyName surveys={surveys} />
                   <Tabs>
                     <TabList>
-                      <Tab>Survey Questions</Tab>
-                      <Tab>Survey Results</Tab>
+                      <Tab
+                        color={
+                          errors.surveyQuestions &&
+                          touched.surveyQuestions &&
+                          'red'
+                        }
+                      >
+                        Survey Questions ({values.surveyQuestions.length}) *
+                      </Tab>
+                      <InfoTooltip
+                        label={
+                          Boolean(errors.surveyQuestions) ||
+                          !values.surveyQuestions.length
+                            ? 'Please fill out your survey questions before moving on to this section'
+                            : ''
+                        }
+                      >
+                        <Tab
+                          isDisabled={
+                            Boolean(errors.surveyQuestions) ||
+                            !values.surveyQuestions.length
+                          }
+                          color={
+                            errors.surveyResults &&
+                            touched.surveyResults &&
+                            'red'
+                          }
+                        >
+                          Survey Results ({values.surveyResults.length}) *
+                        </Tab>
+                      </InfoTooltip>
                     </TabList>
                     <TabPanels>
                       <TabPanel>
@@ -125,10 +159,17 @@ const UserSurveysPage = ({
                 type="submit"
                 onClick={submitForm}
                 isLoading={isSubmitting}
+                isDisabled={
+                  !values.surveyQuestions.length ||
+                  values.surveyResults.length < 2
+                }
                 colorScheme="green"
               >
                 {values.id ? 'Update Survey' : 'Upload Survey'}
               </Button>
+              <Box>{JSON.stringify(errors)}</Box>
+              <Box>{JSON.stringify(touched)}</Box>
+              <Box>{JSON.stringify(values)}</Box>
             </Stack>
           )}
         </Formik>

@@ -1,4 +1,4 @@
-import { SurveyFormValues } from '@/pages/dashboard';
+import { SurveyFormValues } from '@/pages/dashboard/surveys';
 import { Survey } from '@/types/surveys';
 import { FormControl, FormLabel, Switch } from '@chakra-ui/react';
 import { FormikContextType, useFormikContext } from 'formik';
@@ -55,7 +55,7 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
       </FormControl>
 
       {isNewSurvey ? (
-        <InputControl label="Survey Name" name="surveyName" />
+        <InputControl label="Survey Name *" name="surveyName" />
       ) : (
         <SelectControl
           name="surveyName"
