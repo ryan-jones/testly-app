@@ -28,12 +28,13 @@ const UserDashboardPage = ({
   return (
     <BaseLayout title="Dashboard">
       <Stack
+        id="container"
         minHeight="100vh"
         padding={{ base: 4, md: 12 }}
         bgGradient="radial(blackAlpha.50, blackAlpha.200)"
       >
-        <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
-          <Stack spacing={8} flex={1}>
+        <Stack id="stuff" direction={{ base: 'column', md: 'row' }} spacing={4}>
+          <Stack spacing={8} flex={1} id="card-wrapper">
             <AboutMeCard
               userProfile={userProfile}
               onClickEditProfile={onOpen}
@@ -67,6 +68,7 @@ export const getServerSideProps: GetServerSideProps<{
       .verifyIdToken(cookies.firebaseToken);
 
     const surveys: Survey[] = await getAllSurveysById(token.uid);
+
     const userProfile = await getUserProfileById(token.uid);
 
     return {
@@ -76,6 +78,7 @@ export const getServerSideProps: GetServerSideProps<{
       },
     };
   } catch (error) {
+    console.log('ERROR WHILE AUTHENTICATING USER', error);
     return {
       redirect: {
         destination: Page.Login,

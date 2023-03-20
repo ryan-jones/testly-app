@@ -1,5 +1,4 @@
-import { SurveyFormValues } from '@/pages/dashboard/surveys';
-import { Survey } from '@/types/surveys';
+import { Survey, SurveyFormValues } from '@/types/surveys';
 import { UserProfile } from '@/types/user';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';

@@ -20,3 +20,11 @@ export interface Survey {
   surveyQuestions: SurveyQuestion[];
   surveyResults: SurveyResult[];
 }
+
+export interface SurveyFormValues {
+  id: string;
+  createdBy: string;
+  surveyName: string;
+  surveyQuestions: SurveyQuestion[];
+  surveyResults: SurveyResult[];
+}

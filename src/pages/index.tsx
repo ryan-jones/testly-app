@@ -7,9 +7,12 @@ import {
   LinkOverlay,
   SimpleGrid,
   Stack,
+  Text,
 } from '@chakra-ui/react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { getAllSurveys } from '../../firebaseClient';
+
+import NextLink from 'next/link';
 
 const SurveySelectPage = ({
   surveys,
@@ -19,19 +22,28 @@ const SurveySelectPage = ({
       <Stack spacing={4}>
         <Stack
           spacing={12}
-          height="50vh"
+          height="60vh"
           alignItems="center"
           padding={{ base: 4, md: 12 }}
           backgroundColor="blue.600"
         >
           <Stack spacing={8} alignItems="center">
             <Heading as="h1" size="xl" color="white" textAlign="center">
-              Take online surveys and quizzes
+              Welcome to Survely!
             </Heading>
             <Heading color="white" size="lg">
-              Free now. Free forever.
+              A free user-driven survey platform.
             </Heading>
           </Stack>
+          <Text color="white">
+            Take a survey or create your own by creating an account{' '}
+            <NextLink href={Page.Signup}>
+              <Text as="span" textDecoration="underline">
+                here
+              </Text>
+              .
+            </NextLink>
+          </Text>
         </Stack>
         <Stack
           spacing={4}
@@ -41,7 +53,6 @@ const SurveySelectPage = ({
         >
           <Card
             width={{ base: '100%', md: '60%' }}
-            maxHeight={{ base: 'none', md: '40vh' }}
             overflowY="scroll"
             padding={4}
             position="relative"
@@ -86,7 +97,7 @@ export const getStaticProps: GetStaticProps<{
 
   return {
     props: {
-      surveys,
+      surveys: surveys.splice(0, 4),
     },
   };
 };

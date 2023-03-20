@@ -43,7 +43,6 @@ const SurveyQuestionsCard = ({
   const handleOptionSelect = (value: string) => {
     setSelectedAnswer(value);
   };
-
   return (
     <Card width={{ base: '100%', md: '60%' }} padding={4}>
       <CardHeader>
@@ -60,7 +59,7 @@ const SurveyQuestionsCard = ({
             value={selectedAnswer}
             options={options.map((answerOption: SurveyOption) => ({
               label: answerOption.answer,
-              value: answerOption.points.toString(),
+              value: answerOption.points?.toString(),
             }))}
           />
           <Stack

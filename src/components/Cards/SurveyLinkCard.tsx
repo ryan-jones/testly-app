@@ -1,14 +1,14 @@
 import { Page } from '@/types/pages';
 import { Survey } from '@/types/surveys';
-import { Heading, LinkOverlay } from '@chakra-ui/react';
+import { CardProps, Heading, LinkOverlay } from '@chakra-ui/react';
 import SurveyCard from './SurveyCard';
 
-interface SurveyLinkCardProps {
+interface SurveyLinkCardProps extends CardProps {
   survey: Survey;
 }
-const SurveyLinkCard = ({ survey }: SurveyLinkCardProps) => {
+const SurveyLinkCard = ({ survey, ...rest }: SurveyLinkCardProps) => {
   return (
-    <SurveyCard>
+    <SurveyCard minWidth="300px" {...rest}>
       <LinkOverlay href={`${Page.Survey}/${survey.id}`}>
         <Heading color="white" textAlign="center">
           {survey.surveyName}

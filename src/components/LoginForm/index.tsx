@@ -1,12 +1,14 @@
 import BaseLayout from '@/components/Layouts/BaseLayout';
 import { LoginFormValues } from '@/types/auth';
-import { Button, Card, Stack } from '@chakra-ui/react';
+import { Button, Card, FormErrorMessage, Stack } from '@chakra-ui/react';
 import { Formik, FormikProps } from 'formik';
 import { InputControl } from 'formik-chakra-ui';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { Page } from '@/types/pages';
+import ErrorMessage from '../Errors/ErrorMessage';
+import { FirebaseExceptionCode } from '@/types/firebase';
 
 const loginSchema = Yup.object({
   email: Yup.string().required('Email is required'),
@@ -32,13 +34,23 @@ const LoginForm = ({
 }: LoginFormProps) => {
   const router = useRouter();
   const formRef = useRef<FormikProps<LoginFormValues>>(null);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
       await submitAction(data);
       router.push(Page.Home);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (
+        [
+          FirebaseExceptionCode.InvalidEmail,
+          FirebaseExceptionCode.WrongPassword,
+        ].includes(error?.code)
+      ) {
+        setSubmissionError('Email and password values are invalid');
+      }
+
+      setSubmissionError('An error occurred!');
     }
   };
 
@@ -79,6 +91,7 @@ const LoginForm = ({
                 >
                   {submitButtonText}
                 </Button>
+                {submissionError && <ErrorMessage errors={submissionError} />}
                 {children}
               </Stack>
             </Card>

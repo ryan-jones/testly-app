@@ -12,6 +12,7 @@ const MenuList = ({ isOpen }: MenuListProps) => {
 
   const items = [
     { name: 'Home', path: Page.Home },
+    { name: 'Surveys', path: Page.Surveys },
     ...(user.email ? [{ name: 'Dashboard', path: Page.Dashboard }] : []),
   ];
   return (

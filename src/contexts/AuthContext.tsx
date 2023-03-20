@@ -20,7 +20,6 @@ export const AuthContext = createContext<IAuthContext>({
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType>({ email: null, uid: null });
-  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -36,16 +35,24 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         nookies.set(undefined, 'firebaseToken', '', { path: Page.Home });
       }
     });
-    setLoading(false);
 
     return () => unsubscribe();
   }, []);
 
-  const signUp = (email: string, password: string) => {
+  useEffect(() => {
+    const handle = setInterval(async () => {
+      const user = auth.currentUser;
+      if (user) await user.getIdToken(true);
+    }, 10 * 60 * 1000);
+
+    return () => clearInterval(handle);
+  }, []);
+
+  const signUp = async (email: string, password: string) => {
     createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const logIn = (email: string, password: string) => {
+  const logIn = async (email: string, password: string) => {
     signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -56,7 +63,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, signUp, logIn, logOut }}>
-      {loading ? null : children}
+      {children}
     </AuthContext.Provider>
   );
 };
