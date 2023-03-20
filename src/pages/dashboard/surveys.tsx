@@ -27,7 +27,7 @@ import {
 import { getAllSurveysById } from '../../../firebaseClient';
 import firebaseAdmin from '@/firebaseAdmin';
 import { Page } from '@/types/pages';
-import InfoTooltip from '@/components/Notifications/InfoTooltip';
+import SurveyTab from '@/components/SurveyForm/SurveyTab';
 
 export interface SurveyFormValues {
   id: string;
@@ -49,21 +49,23 @@ const surveyFormSchema = Yup.object({
     .of(
       Yup.object().shape({
         question: Yup.string().required('A question is required.'),
-        options: Yup.array().of(
-          Yup.object().shape({
-            answer: Yup.string().required(),
-            points: Yup.number().required(),
-          })
-        ),
+        options: Yup.array()
+          .of(
+            Yup.object().shape({
+              answer: Yup.string().required('Still need a valid answer here!'),
+              points: Yup.number().required(),
+            })
+          )
+          .min(2, 'Each question must have at least two options'),
       })
     )
     .min(1, 'A survey must have at least one queston.'),
   surveyResults: Yup.array()
     .of(
       Yup.object().shape({
-        header: Yup.string().required(),
-        body: Yup.string().required(),
-        score: Yup.string().required(),
+        header: Yup.string().required('Still needs a valid result header!'),
+        body: Yup.string().required('Still needs a valid result body!'),
+        score: Yup.string().required('Still needs a valid point range!'),
       })
     )
     .required()
@@ -110,37 +112,23 @@ const UserSurveysPage = ({
                   <SurveyName surveys={surveys} />
                   <Tabs>
                     <TabList>
-                      <Tab
-                        color={
-                          errors.surveyQuestions &&
-                          touched.surveyQuestions &&
-                          'red'
+                      <SurveyTab
+                        tooltipLabel="Please enter a survey name before moving on to this section"
+                        tabName={`Survey Questions (${values.surveyQuestions.length}) *`}
+                        isDisabled={
+                          Boolean(errors.surveyName) || !values.surveyName
                         }
-                      >
-                        Survey Questions ({values.surveyQuestions.length}) *
-                      </Tab>
-                      <InfoTooltip
-                        label={
+                        errorFieldName="surveyQuestions"
+                      />
+                      <SurveyTab
+                        tooltipLabel="Please fill out your survey questions before moving on to this section"
+                        tabName={`Survey Results (${values.surveyResults.length}) *`}
+                        isDisabled={
                           Boolean(errors.surveyQuestions) ||
                           !values.surveyQuestions.length
-                            ? 'Please fill out your survey questions before moving on to this section'
-                            : ''
                         }
-                      >
-                        <Tab
-                          isDisabled={
-                            Boolean(errors.surveyQuestions) ||
-                            !values.surveyQuestions.length
-                          }
-                          color={
-                            errors.surveyResults &&
-                            touched.surveyResults &&
-                            'red'
-                          }
-                        >
-                          Survey Results ({values.surveyResults.length}) *
-                        </Tab>
-                      </InfoTooltip>
+                        errorFieldName="surveyResults"
+                      />
                     </TabList>
                     <TabPanels>
                       <TabPanel>
@@ -167,9 +155,6 @@ const UserSurveysPage = ({
               >
                 {values.id ? 'Update Survey' : 'Upload Survey'}
               </Button>
-              <Box>{JSON.stringify(errors)}</Box>
-              <Box>{JSON.stringify(touched)}</Box>
-              <Box>{JSON.stringify(values)}</Box>
             </Stack>
           )}
         </Formik>

@@ -1,15 +1,14 @@
 import { SurveyFormValues } from '@/pages/dashboard/surveys';
 import { SurveyOption, SurveyQuestion } from '@/types/surveys';
-import { isArray, isString } from '@/utils/validators';
-import { DeleteIcon } from '@chakra-ui/icons';
+import { checkForMatchKeys } from '@/utils/validators';
 import {
   Accordion,
   AccordionItem,
   AccordionPanel,
   Button,
-  HStack,
-  IconButton,
+  FormLabel,
   Stack,
+  StackDivider,
 } from '@chakra-ui/react';
 import {
   FieldArray,
@@ -17,7 +16,6 @@ import {
   FormikContextType,
   useFormikContext,
 } from 'formik';
-import { InputControl } from 'formik-chakra-ui';
 import ErrorMessage from '../Errors/ErrorMessage';
 import PrimaryField from './PrimaryField';
 import SurveyAccordionButton from './SurveyAccordionButton';
@@ -30,10 +28,6 @@ const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
   const { errors, touched }: FormikContextType<SurveyFormValues> =
     useFormikContext();
 
-  const hasError = (srIndex: number) =>
-    isArray(errors?.surveyQuestions) &&
-    errors.surveyQuestions?.[srIndex] &&
-    touched.surveyQuestions?.[srIndex];
   return (
     <FieldArray
       name="surveyQuestions"
@@ -49,43 +43,47 @@ const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
                 />
 
                 <AccordionPanel>
-                  <Stack spacing={4}>
+                  <Stack spacing={4} divider={<StackDivider />}>
                     <PrimaryField
                       label="Survey Question"
                       name={`surveyQuestions[${sqIndex}].question`}
                       ariaLabel="Delete question"
                       onClick={() => arrayHelpers.remove(sqIndex)}
                     />
-
-                    <FieldArray
-                      name={`surveyQuestions[${sqIndex}].options`}
-                      render={(sqArrayHelpers: FieldArrayRenderProps) => (
-                        <>
-                          {sq.options.map((_: SurveyOption, index: number) => (
-                            <SurveyQuestionOption
-                              key={index}
-                              pointValue={index + 1}
-                              nameField={`surveyQuestions[${sqIndex}].options[${index}]`}
-                              onClickDelete={() => {
-                                sqArrayHelpers.remove(index);
-                              }}
-                            />
-                          ))}
-                          <Button
-                            width="25%"
-                            alignSelf="flex-end"
-                            onClick={() =>
-                              sqArrayHelpers.push({
-                                answer: '...',
-                                points: sq.options.length + 1,
-                              })
-                            }
-                          >
-                            Add option
-                          </Button>
-                        </>
-                      )}
-                    />
+                    <Stack spacing={4}>
+                      <FormLabel>Answers (minimum of 2)</FormLabel>
+                      <FieldArray
+                        name={`surveyQuestions[${sqIndex}].options`}
+                        render={(sqArrayHelpers: FieldArrayRenderProps) => (
+                          <>
+                            {sq.options.map(
+                              (_: SurveyOption, index: number) => (
+                                <SurveyQuestionOption
+                                  key={index}
+                                  pointValue={index + 1}
+                                  nameField={`surveyQuestions[${sqIndex}].options[${index}]`}
+                                  onClickDelete={() => {
+                                    sqArrayHelpers.remove(index);
+                                  }}
+                                />
+                              )
+                            )}
+                            <Button
+                              width="25%"
+                              alignSelf="flex-end"
+                              onClick={() =>
+                                sqArrayHelpers.push({
+                                  answer: '',
+                                  points: sq.options.length + 1,
+                                })
+                              }
+                            >
+                              Add option
+                            </Button>
+                          </>
+                        )}
+                      />
+                    </Stack>
                   </Stack>
                 </AccordionPanel>
               </AccordionItem>
@@ -95,16 +93,17 @@ const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
             colorScheme="blue"
             onClick={() =>
               arrayHelpers.push({
-                question: '...',
+                question: '',
                 options: [],
               })
             }
           >
             Add a question
           </Button>
-          {isString(errors.surveyQuestions) && (
-            <ErrorMessage errors={errors.surveyQuestions} />
-          )}
+          {checkForMatchKeys(
+            errors.surveyQuestions,
+            touched.surveyQuestions
+          ) && <ErrorMessage errors={errors.surveyQuestions} />}
         </Stack>
       )}
     />

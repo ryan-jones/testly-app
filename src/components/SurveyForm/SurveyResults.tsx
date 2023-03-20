@@ -131,7 +131,7 @@ const SurveyResults = ({ surveyResults }: SurveyResultsProps) => {
               arrayHelpers.push({
                 header: '',
                 body: '',
-                score: maxScore,
+                score: surveyResults.length >= 1 ? maxScore : maxScore - 1,
               })
             }
           >
