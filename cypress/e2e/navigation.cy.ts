@@ -17,3 +17,5 @@ describe('Navigation', () => {
     cy.get('a[href*="/dashboard"').should('not.exist');
   });
 });
+
+export {};
