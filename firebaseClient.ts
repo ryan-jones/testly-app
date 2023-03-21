@@ -84,6 +84,11 @@ export const createTest = async (formData: TestFormValues) => {
   await addDoc(collectionRef, rest);
 };
 
+export const createNewUser = async (userProfile: UserProfile) => {
+  const newUserRef = doc(db, 'users', userProfile.id);
+  await setDoc(newUserRef, userProfile);
+};
+
 export const getUserProfileById = async (uid: string): Promise<UserProfile> => {
   const userRef = doc(db, 'users', uid);
   const querySnapshot = await getDoc(userRef);

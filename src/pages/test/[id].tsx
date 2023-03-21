@@ -44,6 +44,9 @@ const TestPage = ({
           <TestResultCard result={testResult} />
         ) : (
           <>
+            <Text textColor="white">
+              {`Question ${questionNumber} of ${test.testQuestions.length}`}
+            </Text>
             <TestQuestionsCard
               question={currentQuestion.question}
               options={currentQuestion.options}
@@ -54,9 +57,6 @@ const TestPage = ({
               isLastQuestion={questionNumber === test.testQuestions.length}
               defaultSelectedAnswer={currentAnswer}
             />
-            <Text textColor="white">
-              {`Question ${questionNumber} of ${test.testQuestions.length}`}
-            </Text>
           </>
         )}
       </Stack>

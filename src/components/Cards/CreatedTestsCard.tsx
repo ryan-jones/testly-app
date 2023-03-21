@@ -7,11 +7,13 @@ import {
   Heading,
   HStack,
   IconButton,
+  Stack,
 } from '@chakra-ui/react';
 import TestLinkCard from './TestLinkCard';
 import NextLink from 'next/link';
 import { Page } from '@/types/pages';
 import { EditIcon } from '@chakra-ui/icons';
+import LinkButton from '../LinkButton';
 
 interface CreatedTestsCardProps {
   tests: Test[];
@@ -29,9 +31,22 @@ const CreatedTestsCard = ({ tests }: CreatedTestsCardProps) => {
       </CardHeader>
       <CardBody>
         <HStack spacing={4} overflowX="scroll">
-          {tests.map((test) => (
-            <TestLinkCard key={test.id} test={test} />
-          ))}
+          {tests.length > 0 ? (
+            tests.map((test) => <TestLinkCard key={test.id} test={test} />)
+          ) : (
+            <Stack spacing={8} alignItems="center" width="100%">
+              <Heading textAlign="center" size="lg">
+                {"You currently don't have any tests"}
+              </Heading>
+              <LinkButton
+                variant="solid"
+                colorScheme="green"
+                href={Page.MyTests}
+              >
+                Create one now
+              </LinkButton>
+            </Stack>
+          )}
         </HStack>
       </CardBody>
     </Card>

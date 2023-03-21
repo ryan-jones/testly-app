@@ -7,7 +7,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
+  useToast,
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { Test, TestFormValues } from '@/types/tests';
@@ -35,7 +35,7 @@ import ErrorMessage from '@/components/Errors/ErrorMessage';
 import { UserProfile } from '@/types/user';
 import { testFormSchema } from '@/schemas/testFormSchema';
 import { useRouter } from 'next/router';
-import { isString } from '@/utils/validators';
+import useToaster from '@/hooks/useToaster';
 
 const initialValues: Omit<TestFormValues, 'createdBy'> = {
   id: '',
@@ -48,6 +48,7 @@ const UserTestsPage = ({
   tests,
   userProfile,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { successToast, errorToast } = useToaster();
   const formRef = useRef<FormikProps<TestFormValues>>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const router = useRouter();
@@ -59,9 +60,14 @@ const UserTestsPage = ({
       } else {
         await createTest(formData);
       }
+      successToast('Test was successfully uploaded!');
+
       router.push(Page.Dashboard);
     } catch (error) {
       setSubmissionError('An error occurred while submitting your test!');
+      errorToast(
+        'An error occurred while submitted your test!. Please try again in a few moments.'
+      );
     }
   };
   return (

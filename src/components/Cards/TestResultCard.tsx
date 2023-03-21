@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import NextLink from 'next/link';
+import LinkButton from '../LinkButton';
 
 interface TestResultCardProps {
   result: TestResult;
@@ -30,11 +30,7 @@ const TestResultCard = ({ result }: TestResultCardProps) => {
       <CardBody>
         <Stack spacing={8}>
           <Text>{result.body}</Text>
-          <NextLink href={Page.Home} passHref>
-            <Button as="span" colorScheme="blue">
-              Return to Home Screen
-            </Button>
-          </NextLink>
+          <LinkButton href={Page.Home}>Return to Home Screen</LinkButton>
         </Stack>
       </CardBody>
     </Card>

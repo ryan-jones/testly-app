@@ -5,8 +5,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { auth } from '../../firebaseClient';
-import { UserType } from '@/types/user';
+import { auth, createNewUser } from '../../firebaseClient';
+import { UserProfile, UserType } from '@/types/user';
 import { IAuthContext } from '@/types/auth';
 import nookies from 'nookies';
 import { Page } from '@/types/pages';
@@ -50,12 +50,20 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     return () => clearInterval(handle);
   }, []);
 
-  const signUp = async (email: string, password: string) => {
-    createUserWithEmailAndPassword(auth, email, password);
+  const signUp = async (email: string, password: string, username: string) => {
+    const newUser = await createUserWithEmailAndPassword(auth, email, password);
+    const newUserProfile: UserProfile = {
+      id: newUser.user.uid,
+      email: newUser.user.email || '',
+      username,
+      completedTests: [],
+    };
+
+    await createNewUser(newUserProfile);
   };
 
   const logIn = async (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const logOut = async () => {

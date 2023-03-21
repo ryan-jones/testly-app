@@ -71,7 +71,7 @@ const TestSelectPage = ({
             </SimpleGrid>
           </Card>
           <Heading as="h3" size="lg" color="green.500">
-            Or create your own
+            Or signup to create your own
           </Heading>
           <LinkButton variant="solid" colorScheme="green" href={Page.Signup}>
             Sign Up

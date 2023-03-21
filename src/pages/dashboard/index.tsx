@@ -65,7 +65,6 @@ export const getServerSideProps: GetServerSideProps<{
       .verifyIdToken(cookies.firebaseToken);
 
     const tests: Test[] = await getAllTestsById(token.uid);
-
     const userProfile = await getUserProfileById(token.uid);
 
     return {
@@ -75,7 +74,6 @@ export const getServerSideProps: GetServerSideProps<{
       },
     };
   } catch (error) {
-    console.log('ERROR WHILE AUTHENTICATING USER', error);
     return {
       redirect: {
         destination: Page.Login,
