@@ -8,7 +8,7 @@ import {
   Heading,
   Stack,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
 import RadioButtonGroup from '../RadioButtonGroup';
 
 interface TestQuestionsCardProps {
@@ -43,11 +43,23 @@ const TestQuestionsCard = ({
   const handleOptionSelect = (value: string) => {
     setSelectedAnswer(value);
   };
+
+  const handleMoveToNextAnswer = () => {
+    onClickNext(Number(selectedAnswer));
+    setSelectedAnswer('');
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' && selectedAnswer) {
+      handleMoveToNextAnswer();
+    }
+  };
   return (
     <Card
       width={{ base: '100%', md: '60%' }}
       padding={4}
       data-test-id={`${question}-card`}
+      onKeyDown={handleKeyDown}
     >
       <CardHeader>
         <Heading as="h1" size="lg">
@@ -92,10 +104,7 @@ const TestQuestionsCard = ({
               <Button
                 colorScheme="blue"
                 isDisabled={!selectedAnswer}
-                onClick={() => {
-                  onClickNext(Number(selectedAnswer));
-                  setSelectedAnswer('');
-                }}
+                onClick={handleMoveToNextAnswer}
               >
                 Next question
               </Button>
