@@ -16,7 +16,12 @@ interface SurveyResultCardProps {
 }
 const SurveyResultCard = ({ result }: SurveyResultCardProps) => {
   return (
-    <Card width={{ base: '100%', md: '65%' }} overflowY="scroll" padding={4}>
+    <Card
+      width={{ base: '100%', md: '65%' }}
+      overflowY="scroll"
+      padding={4}
+      data-test-id="results-card"
+    >
       <CardHeader>
         <Heading as="h1" size="lg">
           {result.header}

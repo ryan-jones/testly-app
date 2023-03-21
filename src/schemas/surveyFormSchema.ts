@@ -1,3 +1,4 @@
+import { SurveyQuestion } from '@/types/surveys';
 import * as Yup from 'yup';
 
 export const surveyFormSchema = Yup.object({
@@ -22,9 +23,28 @@ export const surveyFormSchema = Yup.object({
       Yup.object().shape({
         header: Yup.string().required('Still needs a valid result header!'),
         body: Yup.string().required('Still needs a valid result body!'),
-        score: Yup.string().required('Still needs a valid point range!'),
+        score: Yup.number().required('Still needs a valid point range!'),
       })
     )
     .required()
-    .min(2, 'Each survey must have at least two results.'),
+    .min(2, 'Each survey must have at least two results.')
+    .test(
+      'maxValue',
+      'Last result score must equal max point value',
+      function (results = []) {
+        const { surveyQuestions, surveyResults } = this.parent;
+        const totalMaxPoints = surveyQuestions.reduce(
+          (sum: number, question: SurveyQuestion) => {
+            return sum + question.options.length;
+          },
+          0
+        );
+        if (surveyResults.length) {
+          return (
+            surveyResults[surveyResults.length - 1].score === totalMaxPoints
+          );
+        }
+        return true;
+      }
+    ),
 });

@@ -49,7 +49,7 @@ const SurveyResults = ({ surveyResults }: SurveyResultsProps) => {
         <Stack spacing={8}>
           <Text>Max Score: {maxScore} points</Text>
           <Accordion allowToggle>
-            {surveyResults.map((sr: any, srIndex: number) => {
+            {surveyResults.map((sr: SurveyResult, srIndex: number) => {
               const minScore = srIndex
                 ? Number(surveyResults[srIndex - 1].score || 0) + 1
                 : 1;

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cypress": "env-cmd cypress open"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
@@ -17,6 +18,9 @@
     "@types/node": "18.15.3",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "cypress": "^12.8.1",
+    "cypress-firebase": "^2.2.5",
+    "env-cmd": "^10.1.0",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "firebase": "^9.17.2",

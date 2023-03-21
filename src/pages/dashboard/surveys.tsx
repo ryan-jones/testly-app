@@ -7,6 +7,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { Survey, SurveyFormValues } from '@/types/surveys';
@@ -27,13 +28,14 @@ import {
   getUserProfileById,
   updateSurvey,
 } from '../../../firebaseClient';
-import firebaseAdmin from '@/firebaseAdmin';
+import firebaseAdmin from '../../../firebaseAdmin';
 import { Page } from '@/types/pages';
 import SurveyTab from '@/components/SurveyForm/SurveyTab';
 import ErrorMessage from '@/components/Errors/ErrorMessage';
 import { UserProfile } from '@/types/user';
 import { surveyFormSchema } from '@/schemas/surveyFormSchema';
 import { useRouter } from 'next/router';
+import { isString } from '@/utils/validators';
 
 const initialValues: Omit<SurveyFormValues, 'createdBy'> = {
   id: '',
@@ -78,7 +80,7 @@ const UserSurveysPage = ({
           validationSchema={surveyFormSchema}
           onSubmit={uploadSurvey}
         >
-          {({ isSubmitting, submitForm, values, errors }) => (
+          {({ isSubmitting, submitForm, values, errors, touched }) => (
             <Stack spacing={8} width="50%">
               <Card padding={4} overflowY="scroll">
                 <Stack spacing={4}>
@@ -89,7 +91,9 @@ const UserSurveysPage = ({
                         tooltipLabel="Please enter a survey name before moving on to this section"
                         tabName={`Survey Questions (${values.surveyQuestions.length}) *`}
                         isDisabled={
-                          Boolean(errors.surveyName) || !values.surveyName
+                          Boolean(errors.surveyName) ||
+                          !values.surveyName ||
+                          Boolean(errors.surveyResults)
                         }
                         errorFieldName="surveyQuestions"
                       />
@@ -129,6 +133,8 @@ const UserSurveysPage = ({
                 {values.id ? 'Update Survey' : 'Upload Survey'}
               </Button>
               {submissionError && <ErrorMessage errors={submissionError} />}
+              <Text>{JSON.stringify(errors)}</Text>
+              <Text>{JSON.stringify(touched)}</Text>
             </Stack>
           )}
         </Formik>

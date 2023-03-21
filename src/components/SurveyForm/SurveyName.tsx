@@ -1,5 +1,4 @@
-import { SurveyFormValues } from '@/pages/dashboard/surveys';
-import { Survey } from '@/types/surveys';
+import { Survey, SurveyFormValues } from '@/types/surveys';
 import { FormControl, FormLabel, Switch } from '@chakra-ui/react';
 import { FormikContextType, useFormikContext } from 'formik';
 import { InputControl, SelectControl } from 'formik-chakra-ui';
@@ -9,7 +8,7 @@ interface SurveyNameProps {
   surveys: Survey[];
 }
 const SurveyName = ({ surveys }: SurveyNameProps) => {
-  const { setFieldValue }: FormikContextType<SurveyFormValues> =
+  const { setFieldValue, values }: FormikContextType<SurveyFormValues> =
     useFormikContext();
 
   const [isNewSurvey, setIsNewSurvey] = useState(true);
@@ -30,7 +29,7 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
     }
   };
 
-  const onSelectSurveyChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onSelectSurveyChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedSurvey = surveys.find(
       (survey) => survey.id === e.target.value
     );
@@ -60,7 +59,10 @@ const SurveyName = ({ surveys }: SurveyNameProps) => {
         <SelectControl
           name="surveyName"
           label="Select Survey"
-          onChange={onSelectSurveyChange}
+          selectProps={{
+            value: values.id,
+            onChange: (e) => onSelectSurveyChange(e),
+          }}
         >
           {surveys.map((survey: Survey) => (
             <option key={survey.id} value={survey.id}>

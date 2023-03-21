@@ -16,7 +16,7 @@ interface SurveyQuestionsCardProps {
   options: SurveyOption[];
   onClickNext: (points: number) => void;
   onClickPrevious: () => void;
-  onClickSubmit: () => void;
+  onClickSubmit: (points: number) => void;
   isFirstQuestion: boolean;
   isLastQuestion: boolean;
   defaultSelectedAnswer: string;
@@ -44,7 +44,11 @@ const SurveyQuestionsCard = ({
     setSelectedAnswer(value);
   };
   return (
-    <Card width={{ base: '100%', md: '60%' }} padding={4}>
+    <Card
+      width={{ base: '100%', md: '60%' }}
+      padding={4}
+      data-test-id={`${question}-card`}
+    >
       <CardHeader>
         <Heading as="h1" size="lg">
           {question}
@@ -79,7 +83,7 @@ const SurveyQuestionsCard = ({
             {isLastQuestion ? (
               <Button
                 isDisabled={!selectedAnswer}
-                onClick={onClickSubmit}
+                onClick={() => onClickSubmit(Number(selectedAnswer))}
                 colorScheme="green"
               >
                 Submit your answers

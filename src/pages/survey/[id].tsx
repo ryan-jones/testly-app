@@ -40,7 +40,7 @@ const SurveyPage = ({
               options={currentQuestion.options}
               onClickNext={(points: number) => getNextQuestion(points)}
               onClickPrevious={() => getPreviousQuestion()}
-              onClickSubmit={getResult}
+              onClickSubmit={(points: number) => getResult(points)}
               isFirstQuestion={questionNumber === 1}
               isLastQuestion={questionNumber === survey.surveyQuestions.length}
               defaultSelectedAnswer={currentAnswer}

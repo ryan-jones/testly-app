@@ -1,14 +1,7 @@
 import SurveyLinkCard from '@/components/Cards/SurveyLinkCard';
 import BaseLayout from '@/components/Layouts/BaseLayout';
 import { Survey } from '@/types/surveys';
-import {
-  Heading,
-  HStack,
-  SimpleGrid,
-  Stack,
-  Wrap,
-  WrapItem,
-} from '@chakra-ui/react';
+import { Heading, SimpleGrid, Stack } from '@chakra-ui/react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getAllSurveys } from '../../firebaseClient';
 
@@ -23,7 +16,7 @@ const SurveysPage = ({
         minHeight="100vh"
         bgGradient="radial(blackAlpha.50, blackAlpha.200)"
       >
-        <Heading>Choose a survey</Heading>
+        <Heading as="h1">Choose a survey</Heading>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
           {surveys.map((survey: Survey) => (
             <SurveyLinkCard key={survey.id} survey={survey} />

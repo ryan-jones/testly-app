@@ -25,21 +25,35 @@ const useSurvey = (survey: Survey) => {
     setCurrentQuestion(survey.surveyQuestions[questionNumberRef.current]);
   }, [survey.surveyQuestions, answers]);
 
-  const getResult = useCallback(() => {
-    const totalpoints = Array.from(answers.values()).reduce(
-      (sum: number, answer: number) => sum + answer,
-      0
-    );
-    const surveyResultIndex = survey.surveyResults.findIndex(
-      (surveyResult: SurveyResult, index: number) => {
-        return (
-          totalpoints >= surveyResult.score &&
-          totalpoints < survey.surveyResults[index + 1].score
-        );
-      }
-    );
-    setResult(survey.surveyResults[surveyResultIndex]);
-  }, [survey.surveyResults, answers]);
+  const getResult = useCallback(
+    (points: number) => {
+      const totalPoints = [...Array.from(answers.values()), points].reduce(
+        (sum: number, answer: number) => sum + answer,
+        0
+      );
+
+      const surveyResultIndex = survey.surveyResults.findIndex(
+        (surveyResult: SurveyResult, index: number) => {
+          if (!index) {
+            return totalPoints > 0 && totalPoints <= surveyResult.score;
+          }
+
+          return (
+            totalPoints > survey.surveyResults[index - 1].score &&
+            totalPoints <= surveyResult.score
+          );
+        }
+      );
+      console.log(
+        'index and result',
+        surveyResultIndex,
+        survey.surveyResults[surveyResultIndex]
+      );
+
+      setResult(survey.surveyResults[surveyResultIndex]);
+    },
+    [survey.surveyResults, answers, survey.surveyQuestions]
+  );
 
   return {
     currentQuestion,

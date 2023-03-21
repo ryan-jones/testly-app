@@ -10,7 +10,7 @@ import {
   InferGetServerSidePropsType,
 } from 'next';
 import { getAllSurveysById, getUserProfileById } from '../../../firebaseClient';
-import firebaseAdmin from '@/firebaseAdmin';
+import firebaseAdmin from '../../../firebaseAdmin';
 import { Page } from '@/types/pages';
 import { UserProfile } from '@/types/user';
 
