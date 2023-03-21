@@ -1,105 +1,99 @@
 import BaseLayout from '@/components/Layouts/BaseLayout';
 import { Page } from '@/types/pages';
-import { Survey } from '@/types/surveys';
+import { Test } from '@/types/tests';
 import {
   Card,
   Heading,
   LinkOverlay,
   SimpleGrid,
   Stack,
-  Text,
 } from '@chakra-ui/react';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { getAllSurveys } from '../../firebaseClient';
+import { getAllTests } from '../../firebaseClient';
 
-import NextLink from 'next/link';
+import LinkButton from '@/components/LinkButton';
 
-const SurveySelectPage = ({
-  surveys,
+const TestSelectPage = ({
+  tests,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
-    <BaseLayout title="Survey Select">
-      <Stack spacing={4}>
+    <BaseLayout title="Test Select">
+      <Stack
+        spacing={8}
+        height="80vh"
+        alignItems="center"
+        justifyContent="center"
+        padding={{ base: 4, md: 12 }}
+        backgroundColor="blue.600"
+      >
+        <Heading as="h1" size="4xl" color="white">
+          Welcome to Testly!
+        </Heading>
+        <Heading color="white" size="lg">
+          A free user-driven test platform
+        </Heading>
+      </Stack>
+      <Stack
+        spacing={4}
+        padding={12}
+        alignItems="center"
+        backgroundColor="blackAlpha.50"
+      >
         <Stack
-          spacing={12}
-          height="60vh"
+          spacing={8}
+          position="relative"
+          zIndex={100}
+          top={-60}
           alignItems="center"
-          padding={{ base: 4, md: 12 }}
-          backgroundColor="blue.600"
+          width={{ base: '100%', md: '70%' }}
         >
-          <Stack spacing={8} alignItems="center">
-            <Heading as="h1" size="xl" color="white" textAlign="center">
-              Welcome to Survely!
-            </Heading>
-            <Heading color="white" size="lg">
-              A free user-driven survey platform.
-            </Heading>
-          </Stack>
-          <Text color="white">
-            Take a survey or create your own by creating an account{' '}
-            <NextLink href={Page.Signup}>
-              <Text as="span" textDecoration="underline">
-                here
-              </Text>
-              .
-            </NextLink>
-          </Text>
-        </Stack>
-        <Stack
-          spacing={4}
-          padding={12}
-          alignItems="center"
-          backgroundColor="green.600"
-        >
-          <Card
-            width={{ base: '100%', md: '60%' }}
-            overflowY="scroll"
-            padding={4}
-            position="relative"
-            zIndex={100}
-            top={-40}
-          >
+          <Heading as="h3" size="md" color="white">
+            Get started by taking a test
+          </Heading>
+          <Card overflowY="scroll" padding={4}>
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
-              {surveys.map((survey: Survey) => (
+              {tests.map((test: Test) => (
                 <Card
-                  key={survey.id}
+                  key={test.id}
                   height="30vh"
                   padding={4}
                   bgGradient="linear(to-bl, green.200, blue.600)"
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <LinkOverlay
-                    key={survey.id}
-                    href={`${Page.Survey}/${survey.id}`}
-                  >
+                  <LinkOverlay key={test.id} href={`${Page.Test}/${test.id}`}>
                     <Heading color="white" textAlign="center">
-                      {survey.surveyName}
+                      {test.testName}
                     </Heading>
                   </LinkOverlay>
                 </Card>
               ))}
             </SimpleGrid>
           </Card>
-          <Heading color="white" size="lg">
-            Over 2 Users Worldwide since 2023
+          <Heading as="h3" size="lg" color="green.500">
+            Or create your own
           </Heading>
+          <LinkButton variant="solid" colorScheme="green" href={Page.Signup}>
+            Sign Up
+          </LinkButton>
         </Stack>
+        <Heading color="green.500" size="lg">
+          Over 2 Users Worldwide since 2023
+        </Heading>
       </Stack>
     </BaseLayout>
   );
 };
 
 export const getStaticProps: GetStaticProps<{
-  surveys: Survey[];
+  tests: Test[];
 }> = async () => {
-  const surveys: Survey[] = await getAllSurveys();
-
+  const tests: Test[] = await getAllTests();
   return {
     props: {
-      surveys: surveys.splice(0, 4),
+      tests: tests.splice(0, 4),
     },
   };
 };
 
-export default SurveySelectPage;
+export default TestSelectPage;

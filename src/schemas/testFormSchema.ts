@@ -1,9 +1,9 @@
-import { SurveyQuestion } from '@/types/surveys';
+import { TestQuestion } from '@/types/tests';
 import * as Yup from 'yup';
 
-export const surveyFormSchema = Yup.object({
-  surveyName: Yup.string().required('Survey Name is required.'),
-  surveyQuestions: Yup.array()
+export const testFormSchema = Yup.object({
+  testName: Yup.string().required('Test Name is required.'),
+  testQuestions: Yup.array()
     .of(
       Yup.object().shape({
         question: Yup.string().required('A question is required.'),
@@ -17,8 +17,8 @@ export const surveyFormSchema = Yup.object({
           .min(2, 'Each question must have at least two options'),
       })
     )
-    .min(1, 'A survey must have at least one queston.'),
-  surveyResults: Yup.array()
+    .min(1, 'A test must have at least one queston.'),
+  testResults: Yup.array()
     .of(
       Yup.object().shape({
         header: Yup.string().required('Still needs a valid result header!'),
@@ -27,22 +27,20 @@ export const surveyFormSchema = Yup.object({
       })
     )
     .required()
-    .min(2, 'Each survey must have at least two results.')
+    .min(2, 'Each test must have at least two results.')
     .test(
       'maxValue',
       'Last result score must equal max point value',
       function (results = []) {
-        const { surveyQuestions, surveyResults } = this.parent;
-        const totalMaxPoints = surveyQuestions.reduce(
-          (sum: number, question: SurveyQuestion) => {
+        const { testQuestions, testResults } = this.parent;
+        const totalMaxPoints = testQuestions.reduce(
+          (sum: number, question: TestQuestion) => {
             return sum + question.options.length;
           },
           0
         );
-        if (surveyResults.length) {
-          return (
-            surveyResults[surveyResults.length - 1].score === totalMaxPoints
-          );
+        if (testResults.length) {
+          return testResults[testResults.length - 1].score === totalMaxPoints;
         }
         return true;
       }

@@ -1,4 +1,4 @@
-import { SurveyOption } from '@/types/surveys';
+import { TestOption } from '@/types/tests';
 import {
   Button,
   Card,
@@ -11,9 +11,9 @@ import {
 import { useEffect, useState } from 'react';
 import RadioButtonGroup from '../RadioButtonGroup';
 
-interface SurveyQuestionsCardProps {
+interface TestQuestionsCardProps {
   question: string;
-  options: SurveyOption[];
+  options: TestOption[];
   onClickNext: (points: number) => void;
   onClickPrevious: () => void;
   onClickSubmit: (points: number) => void;
@@ -21,7 +21,7 @@ interface SurveyQuestionsCardProps {
   isLastQuestion: boolean;
   defaultSelectedAnswer: string;
 }
-const SurveyQuestionsCard = ({
+const TestQuestionsCard = ({
   question,
   options,
   onClickNext,
@@ -30,7 +30,7 @@ const SurveyQuestionsCard = ({
   isFirstQuestion,
   isLastQuestion,
   defaultSelectedAnswer,
-}: SurveyQuestionsCardProps) => {
+}: TestQuestionsCardProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string>(
     defaultSelectedAnswer
   );
@@ -61,7 +61,7 @@ const SurveyQuestionsCard = ({
             onChange={handleOptionSelect}
             defaultValue={selectedAnswer}
             value={selectedAnswer}
-            options={options.map((answerOption: SurveyOption) => ({
+            options={options.map((answerOption: TestOption) => ({
               label: answerOption.answer,
               value: answerOption.points?.toString(),
             }))}
@@ -107,4 +107,4 @@ const SurveyQuestionsCard = ({
   );
 };
 
-export default SurveyQuestionsCard;
+export default TestQuestionsCard;

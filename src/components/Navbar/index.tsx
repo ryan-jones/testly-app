@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { useState } from 'react';
 import Logo from './Logo';
 import MenuList from './MenuList';

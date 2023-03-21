@@ -1,18 +1,18 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Box, HStack, IconButton } from '@chakra-ui/react';
-import { InputControl, NumberInputControl } from 'formik-chakra-ui';
+import { InputControl } from 'formik-chakra-ui';
 import UneditableField from './UneditableField';
 
-interface SurveyQuestionOptionProps {
+interface TestQuestionOptionProps {
   nameField: string;
   pointValue: number;
   onClickDelete: () => void;
 }
-const SurveyQuestionOption = ({
+const TestQuestionOption = ({
   nameField,
   onClickDelete,
   pointValue,
-}: SurveyQuestionOptionProps) => {
+}: TestQuestionOptionProps) => {
   return (
     <HStack alignItems="flex-end">
       <InputControl name={`${nameField}.answer`} label="Answer" />
@@ -32,4 +32,4 @@ const SurveyQuestionOption = ({
   );
 };
 
-export default SurveyQuestionOption;
+export default TestQuestionOption;

@@ -1,5 +1,4 @@
-import { SurveyFormValues } from '@/pages/dashboard/surveys';
-import { SurveyOption, SurveyQuestion } from '@/types/surveys';
+import { TestFormValues, TestOption, TestQuestion } from '@/types/tests';
 import { checkForMatchKeys } from '@/utils/validators';
 import {
   Accordion,
@@ -18,56 +17,54 @@ import {
 } from 'formik';
 import ErrorMessage from '../Errors/ErrorMessage';
 import PrimaryField from './PrimaryField';
-import SurveyAccordionButton from './SurveyAccordionButton';
-import SurveyQuestionOption from './SurveyQuestionOption';
+import TestAccordionButton from './TestAccordionButton';
+import TestQuestionOption from './TestQuestionOption';
 
-interface SurveyQuestionsProps {
-  surveyQuestions: SurveyQuestion[];
+interface TestQuestionsProps {
+  testQuestions: TestQuestion[];
 }
-const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
-  const { errors, touched }: FormikContextType<SurveyFormValues> =
+const TestQuestions = ({ testQuestions }: TestQuestionsProps) => {
+  const { errors, touched }: FormikContextType<TestFormValues> =
     useFormikContext();
 
   return (
     <FieldArray
-      name="surveyQuestions"
+      name="testQuestions"
       render={(arrayHelpers: FieldArrayRenderProps) => (
         <Stack spacing={8}>
           <Accordion allowToggle>
-            {surveyQuestions?.map((sq: SurveyQuestion, sqIndex: number) => (
+            {testQuestions?.map((sq: TestQuestion, sqIndex: number) => (
               <AccordionItem key={sqIndex}>
-                <SurveyAccordionButton
+                <TestAccordionButton
                   index={sqIndex}
                   header={sq.question}
-                  field="surveyQuestions"
+                  field="testQuestions"
                 />
 
                 <AccordionPanel>
                   <Stack spacing={4} divider={<StackDivider />}>
                     <PrimaryField
-                      label="Survey Question"
-                      name={`surveyQuestions[${sqIndex}].question`}
+                      label="Test Question"
+                      name={`testQuestions[${sqIndex}].question`}
                       ariaLabel="Delete question"
                       onClick={() => arrayHelpers.remove(sqIndex)}
                     />
                     <Stack spacing={4}>
                       <FormLabel>Answers (minimum of 2)</FormLabel>
                       <FieldArray
-                        name={`surveyQuestions[${sqIndex}].options`}
+                        name={`testQuestions[${sqIndex}].options`}
                         render={(sqArrayHelpers: FieldArrayRenderProps) => (
                           <>
-                            {sq.options.map(
-                              (_: SurveyOption, index: number) => (
-                                <SurveyQuestionOption
-                                  key={index}
-                                  pointValue={index + 1}
-                                  nameField={`surveyQuestions[${sqIndex}].options[${index}]`}
-                                  onClickDelete={() => {
-                                    sqArrayHelpers.remove(index);
-                                  }}
-                                />
-                              )
-                            )}
+                            {sq.options.map((_: TestOption, index: number) => (
+                              <TestQuestionOption
+                                key={index}
+                                pointValue={index + 1}
+                                nameField={`testQuestions[${sqIndex}].options[${index}]`}
+                                onClickDelete={() => {
+                                  sqArrayHelpers.remove(index);
+                                }}
+                              />
+                            ))}
                             <Button
                               width="25%"
                               alignSelf="flex-end"
@@ -100,14 +97,13 @@ const SurveyQuestions = ({ surveyQuestions }: SurveyQuestionsProps) => {
           >
             Add a question
           </Button>
-          {checkForMatchKeys(
-            errors.surveyQuestions,
-            touched.surveyQuestions
-          ) && <ErrorMessage errors={errors.surveyQuestions} />}
+          {checkForMatchKeys(errors.testQuestions, touched.testQuestions) && (
+            <ErrorMessage errors={errors.testQuestions} />
+          )}
         </Stack>
       )}
     />
   );
 };
 
-export default SurveyQuestions;
+export default TestQuestions;

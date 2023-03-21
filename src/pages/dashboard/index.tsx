@@ -1,7 +1,7 @@
 import BaseLayout from '@/components/Layouts/BaseLayout';
 import { Stack, useDisclosure } from '@chakra-ui/react';
 
-import { Survey } from '@/types/surveys';
+import { Test } from '@/types/tests';
 
 import nookies from 'nookies';
 import {
@@ -9,22 +9,21 @@ import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import { getAllSurveysById, getUserProfileById } from '../../../firebaseClient';
+import { getAllTestsById, getUserProfileById } from '../../../firebaseClient';
 import firebaseAdmin from '../../../firebaseAdmin';
 import { Page } from '@/types/pages';
 import { UserProfile } from '@/types/user';
 
-import CreatedSurveysCard from '@/components/Cards/CreatedSurveysCard';
-import CompletedSurveysCard from '@/components/Cards/CompletedSurveysCard';
+import CreatedTestsCard from '@/components/Cards/CreatedTestsCard';
+import CompletedTestsCard from '@/components/Cards/CompletedTestsCard';
 import AboutMeCard from '@/components/Cards/AboutMeCard';
 import EditUserModal from '@/components/Dashboard/EditUserModal';
 
 const UserDashboardPage = ({
-  surveys,
+  tests,
   userProfile,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
     <BaseLayout title="Dashboard">
       <Stack
@@ -41,10 +40,8 @@ const UserDashboardPage = ({
             />
           </Stack>
           <Stack spacing={8} width={{ base: '100%', md: '75%' }}>
-            <CreatedSurveysCard surveys={surveys} />
-            <CompletedSurveysCard
-              completedSurveys={userProfile.completedSurveys}
-            />
+            <CreatedTestsCard tests={tests} />
+            <CompletedTestsCard completedTests={userProfile.completedTests} />
           </Stack>
         </Stack>
       </Stack>
@@ -58,7 +55,7 @@ const UserDashboardPage = ({
 };
 
 export const getServerSideProps: GetServerSideProps<{
-  surveys: Survey[];
+  tests: Test[];
   userProfile: UserProfile;
 }> = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -67,13 +64,13 @@ export const getServerSideProps: GetServerSideProps<{
       .auth()
       .verifyIdToken(cookies.firebaseToken);
 
-    const surveys: Survey[] = await getAllSurveysById(token.uid);
+    const tests: Test[] = await getAllTestsById(token.uid);
 
     const userProfile = await getUserProfileById(token.uid);
 
     return {
       props: {
-        surveys,
+        tests,
         userProfile,
       },
     };

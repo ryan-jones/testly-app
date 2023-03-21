@@ -4,9 +4,8 @@ describe('Navigation', () => {
   });
 
   it('should navigate between pages', () => {
-    cy.get('a[href*="/surveys"').click();
-    cy.url().should('include', '/surveys');
-    cy.get('h1').contains('Choose a survey');
+    cy.get('a[href*="/tests"').click();
+    cy.url().should('include', '/tests');
 
     cy.get('a[href*="/login"').click();
     cy.url().should('include', '/login');

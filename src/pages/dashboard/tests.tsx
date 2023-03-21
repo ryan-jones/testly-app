@@ -10,58 +10,58 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
-import { Survey, SurveyFormValues } from '@/types/surveys';
+import { Test, TestFormValues } from '@/types/tests';
 import { Formik, FormikProps } from 'formik';
 import nookies from 'nookies';
 
-import SurveyName from '@/components/SurveyForm/SurveyName';
-import SurveyQuestions from '@/components/SurveyForm/SurveyQuestions';
-import SurveyResults from '@/components/SurveyForm/SurveyResults';
+import TestName from '@/components/TestForm/TestName';
+import TestQuestions from '@/components/TestForm/TestQuestions';
+import TestResults from '@/components/TestForm/TestResults';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
 import {
-  createSurvey,
-  getAllSurveysById,
+  createTest,
+  getAllTestsById,
   getUserProfileById,
-  updateSurvey,
+  updateTest,
 } from '../../../firebaseClient';
 import firebaseAdmin from '../../../firebaseAdmin';
 import { Page } from '@/types/pages';
-import SurveyTab from '@/components/SurveyForm/SurveyTab';
+import TestTab from '@/components/TestForm/TestTab';
 import ErrorMessage from '@/components/Errors/ErrorMessage';
 import { UserProfile } from '@/types/user';
-import { surveyFormSchema } from '@/schemas/surveyFormSchema';
+import { testFormSchema } from '@/schemas/testFormSchema';
 import { useRouter } from 'next/router';
 import { isString } from '@/utils/validators';
 
-const initialValues: Omit<SurveyFormValues, 'createdBy'> = {
+const initialValues: Omit<TestFormValues, 'createdBy'> = {
   id: '',
-  surveyName: '',
-  surveyQuestions: [],
-  surveyResults: [],
+  testName: '',
+  testQuestions: [],
+  testResults: [],
 };
 
-const UserSurveysPage = ({
-  surveys,
+const UserTestsPage = ({
+  tests,
   userProfile,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const formRef = useRef<FormikProps<SurveyFormValues>>(null);
+  const formRef = useRef<FormikProps<TestFormValues>>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const router = useRouter();
 
-  const uploadSurvey = async (formData: SurveyFormValues) => {
+  const uploadTest = async (formData: TestFormValues) => {
     try {
       if (formData.id) {
-        await updateSurvey(formData);
+        await updateTest(formData);
       } else {
-        await createSurvey(formData);
+        await createTest(formData);
       }
       router.push(Page.Dashboard);
     } catch (error) {
-      setSubmissionError('An error occurred while submitting your survey!');
+      setSubmissionError('An error occurred while submitting your test!');
     }
   };
   return (
@@ -77,44 +77,42 @@ const UserSurveysPage = ({
         <Formik
           innerRef={formRef}
           initialValues={{ ...initialValues, createdBy: userProfile.id }}
-          validationSchema={surveyFormSchema}
-          onSubmit={uploadSurvey}
+          validationSchema={testFormSchema}
+          onSubmit={uploadTest}
         >
           {({ isSubmitting, submitForm, values, errors, touched }) => (
             <Stack spacing={8} width="50%">
               <Card padding={4} overflowY="scroll">
                 <Stack spacing={4}>
-                  <SurveyName surveys={surveys} />
+                  <TestName tests={tests} />
                   <Tabs>
                     <TabList>
-                      <SurveyTab
-                        tooltipLabel="Please enter a survey name before moving on to this section"
-                        tabName={`Survey Questions (${values.surveyQuestions.length}) *`}
+                      <TestTab
+                        tooltipLabel="Please enter a test name before moving on to this section"
+                        tabName={`Test Questions (${values.testQuestions.length}) *`}
                         isDisabled={
-                          Boolean(errors.surveyName) ||
-                          !values.surveyName ||
-                          Boolean(errors.surveyResults)
+                          Boolean(errors.testName) ||
+                          !values.testName ||
+                          Boolean(errors.testResults)
                         }
-                        errorFieldName="surveyQuestions"
+                        errorFieldName="testQuestions"
                       />
-                      <SurveyTab
-                        tooltipLabel="Please fill out your survey questions before moving on to this section"
-                        tabName={`Survey Results (${values.surveyResults.length}) *`}
+                      <TestTab
+                        tooltipLabel="Please fill out your test questions before moving on to this section"
+                        tabName={`Test Results (${values.testResults.length}) *`}
                         isDisabled={
-                          Boolean(errors.surveyQuestions) ||
-                          !values.surveyQuestions.length
+                          Boolean(errors.testQuestions) ||
+                          !values.testQuestions.length
                         }
-                        errorFieldName="surveyResults"
+                        errorFieldName="testResults"
                       />
                     </TabList>
                     <TabPanels>
                       <TabPanel>
-                        <SurveyQuestions
-                          surveyQuestions={values.surveyQuestions}
-                        />
+                        <TestQuestions testQuestions={values.testQuestions} />
                       </TabPanel>
                       <TabPanel>
-                        <SurveyResults surveyResults={values.surveyResults} />
+                        <TestResults testResults={values.testResults} />
                       </TabPanel>
                     </TabPanels>
                   </Tabs>
@@ -125,16 +123,13 @@ const UserSurveysPage = ({
                 onClick={submitForm}
                 isLoading={isSubmitting}
                 isDisabled={
-                  !values.surveyQuestions.length ||
-                  values.surveyResults.length < 2
+                  !values.testQuestions.length || values.testResults.length < 2
                 }
                 colorScheme="green"
               >
-                {values.id ? 'Update Survey' : 'Upload Survey'}
+                {values.id ? 'Update Test' : 'Upload Test'}
               </Button>
               {submissionError && <ErrorMessage errors={submissionError} />}
-              <Text>{JSON.stringify(errors)}</Text>
-              <Text>{JSON.stringify(touched)}</Text>
             </Stack>
           )}
         </Formik>
@@ -144,7 +139,7 @@ const UserSurveysPage = ({
 };
 
 export const getServerSideProps: GetServerSideProps<{
-  surveys: Survey[];
+  tests: Test[];
   userProfile: UserProfile;
 }> = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -153,12 +148,12 @@ export const getServerSideProps: GetServerSideProps<{
       .auth()
       .verifyIdToken(cookies.firebaseToken);
 
-    const surveys: Survey[] = await getAllSurveysById(token.uid);
+    const tests: Test[] = await getAllTestsById(token.uid);
     const userProfile = await getUserProfileById(token.uid);
 
     return {
       props: {
-        surveys,
+        tests,
         userProfile,
       },
     };
@@ -171,4 +166,4 @@ export const getServerSideProps: GetServerSideProps<{
     };
   }
 };
-export default UserSurveysPage;
+export default UserTestsPage;

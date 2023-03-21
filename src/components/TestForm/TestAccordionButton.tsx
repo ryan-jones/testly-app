@@ -1,5 +1,4 @@
-import { SurveyFormValues } from '@/pages/dashboard/surveys';
-import { SurveyQuestion, SurveyResult } from '@/types/surveys';
+import { TestFormValues, TestQuestion, TestResult } from '@/types/tests';
 import { checkForMatchKeys, isArray, isObject } from '@/utils/validators';
 import { WarningTwoIcon } from '@chakra-ui/icons';
 import { AccordionButton, AccordionIcon, Box, HStack } from '@chakra-ui/react';
@@ -15,12 +14,12 @@ const checkForError = (
   errors?:
     | string
     | string[]
-    | FormikErrors<SurveyQuestion>[]
-    | FormikErrors<SurveyResult>[],
+    | FormikErrors<TestQuestion>[]
+    | FormikErrors<TestResult>[],
   touched?:
     | boolean
-    | FormikTouched<SurveyQuestion>[]
-    | FormikTouched<SurveyResult>[]
+    | FormikTouched<TestQuestion>[]
+    | FormikTouched<TestResult>[]
 ) => {
   if (
     !errors ||
@@ -41,17 +40,17 @@ const checkForError = (
   return checkForMatchKeys(selectErrorField, selectTouchedField);
 };
 
-interface SurveyAccordionButtonProps {
+interface TestAccordionButtonProps {
   index: number;
-  field: keyof SurveyFormValues;
+  field: keyof TestFormValues;
   header: string;
 }
-const SurveyAccordionButton = ({
+const TestAccordionButton = ({
   index,
   header,
   field,
-}: SurveyAccordionButtonProps) => {
-  const { errors, touched }: FormikContextType<SurveyFormValues> =
+}: TestAccordionButtonProps) => {
+  const { errors, touched }: FormikContextType<TestFormValues> =
     useFormikContext();
   const fieldErrors = errors[field];
   const fieldTouched = touched[field];
@@ -76,4 +75,4 @@ const SurveyAccordionButton = ({
   );
 };
 
-export default SurveyAccordionButton;
+export default TestAccordionButton;

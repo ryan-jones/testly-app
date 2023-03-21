@@ -1,10 +1,10 @@
 import { Card, CardProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-interface SurveyCardProps extends CardProps {
+interface TestCardProps extends CardProps {
   children: ReactNode;
 }
-const SurveyCard = ({ children, bgGradient, ...rest }: SurveyCardProps) => {
+const TestCard = ({ children, bgGradient, ...rest }: TestCardProps) => {
   return (
     <Card
       {...rest}
@@ -19,4 +19,4 @@ const SurveyCard = ({ children, bgGradient, ...rest }: SurveyCardProps) => {
   );
 };
 
-export default SurveyCard;
+export default TestCard;

@@ -1,6 +1,6 @@
 import BaseLayout from '@/components/Layouts/BaseLayout';
 import { LoginFormValues } from '@/types/auth';
-import { Button, Card, FormErrorMessage, Stack } from '@chakra-ui/react';
+import { Button, Card, Stack } from '@chakra-ui/react';
 import { Formik, FormikProps } from 'formik';
 import { InputControl } from 'formik-chakra-ui';
 import { ReactNode, useRef, useState } from 'react';

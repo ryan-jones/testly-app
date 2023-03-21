@@ -1,4 +1,4 @@
-import { SurveyFormValues } from '@/pages/dashboard/surveys';
+import { TestFormValues } from '@/types/tests';
 import { checkForMatchKeys } from '@/utils/validators';
 import { Tab } from '@chakra-ui/react';
 import {
@@ -17,19 +17,19 @@ const hasError = (
   return isError;
 };
 
-interface SurveyTabProps {
+interface TestTabProps {
   isDisabled: boolean;
   tabName: string;
   tooltipLabel: string;
-  errorFieldName: keyof SurveyFormValues;
+  errorFieldName: keyof TestFormValues;
 }
-const SurveyTab = ({
+const TestTab = ({
   isDisabled,
   tabName,
   errorFieldName,
   tooltipLabel,
-}: SurveyTabProps) => {
-  const { errors, touched }: FormikContextType<SurveyFormValues> =
+}: TestTabProps) => {
+  const { errors, touched }: FormikContextType<TestFormValues> =
     useFormikContext();
   return (
     <InfoTooltip label={isDisabled ? tooltipLabel : ''}>
@@ -45,4 +45,4 @@ const SurveyTab = ({
   );
 };
 
-export default SurveyTab;
+export default TestTab;

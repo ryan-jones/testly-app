@@ -2,7 +2,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Page } from '@/types/pages';
 import { Box, Button, Stack } from '@chakra-ui/react';
 import MenuItem from './MenuItem';
-import NextLink from 'next/link';
+import LinkButton from '../LinkButton';
 
 interface MenuListProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ const MenuList = ({ isOpen }: MenuListProps) => {
 
   const items = [
     { name: 'Home', path: Page.Home },
-    { name: 'Surveys', path: Page.Surveys },
+    { name: 'Tests', path: Page.Tests },
     ...(user.email ? [{ name: 'Dashboard', path: Page.Dashboard }] : []),
   ];
   return (
@@ -35,11 +35,7 @@ const MenuList = ({ isOpen }: MenuListProps) => {
         {user.email ? (
           <Button onClick={logOut}>Logout</Button>
         ) : (
-          <NextLink href={Page.Login} passHref>
-            <Button as="span" variant="outline">
-              Login
-            </Button>
-          </NextLink>
+          <LinkButton href={Page.Login}>Login</LinkButton>
         )}
       </Stack>
     </Box>

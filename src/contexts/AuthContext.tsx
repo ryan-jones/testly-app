@@ -10,6 +10,7 @@ import { UserType } from '@/types/user';
 import { IAuthContext } from '@/types/auth';
 import nookies from 'nookies';
 import { Page } from '@/types/pages';
+import { useRouter } from 'next/router';
 
 export const AuthContext = createContext<IAuthContext>({
   user: { email: null, uid: null },
@@ -20,6 +21,7 @@ export const AuthContext = createContext<IAuthContext>({
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType>({ email: null, uid: null });
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -59,6 +61,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const logOut = async () => {
     setUser({ email: null, uid: null });
     await signOut(auth);
+    router.push(Page.Home);
   };
 
   return (

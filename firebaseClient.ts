@@ -1,4 +1,4 @@
-import { Survey, SurveyFormValues } from '@/types/surveys';
+import { Test, TestFormValues } from '@/types/tests';
 import { UserProfile } from '@/types/user';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -15,6 +15,7 @@ import {
   QuerySnapshot,
   setDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore';
 
 const app = initializeApp({
@@ -31,53 +32,54 @@ export const auth = getAuth();
 
 const db = getFirestore(app);
 
-const getSurveySnapshot = async (
+const getTestSnapshot = async (
   uid?: string
 ): Promise<QuerySnapshot<DocumentData>> => {
-  const surveysCollection = collection(db, 'surveys');
-  const surveysQuery = uid
-    ? query(surveysCollection, where('createdBy', '==', uid))
-    : query(surveysCollection);
-  const surveySnapshot = await getDocs(surveysQuery);
-  return surveySnapshot;
+  const testsCollection = collection(db, 'tests');
+  const testsQuery = uid
+    ? query(testsCollection, where('createdBy', '==', uid))
+    : query(testsCollection);
+  const testSnapshot = await getDocs(testsQuery);
+  return testSnapshot;
 };
 
-export const getAllSurveysById = async (uid: string): Promise<Survey[]> => {
-  const surveySnapshot = await getSurveySnapshot(uid);
-  return surveySnapshot.docs.map((doc) => ({
-    ...(doc.data() as Omit<Survey, 'id'>),
+export const getAllTestsById = async (uid: string): Promise<Test[]> => {
+  const testSnapshot = await getTestSnapshot(uid);
+  return testSnapshot.docs.map((doc) => ({
+    ...(doc.data() as Omit<Test, 'id'>),
     id: doc.id,
   }));
 };
 
-export const getAllSurveys = async (): Promise<Survey[]> => {
-  const surveySnapshot = await getSurveySnapshot();
-  return surveySnapshot.docs.map((doc) => ({
-    ...(doc.data() as Omit<Survey, 'id'>),
+export const getAllTests = async (): Promise<Test[]> => {
+  const testSnapshot = await getTestSnapshot();
+  return testSnapshot.docs.map((doc) => ({
+    ...(doc.data() as Omit<Test, 'id'>),
     id: doc.id,
   }));
 };
-export const getAllSurveyIds = async (): Promise<string[]> => {
-  const surveySnapshot = await getSurveySnapshot();
-  return surveySnapshot.docs.map((doc) => doc.id);
+
+export const getAllTestIds = async (): Promise<string[]> => {
+  const testSnapshot = await getTestSnapshot();
+  return testSnapshot.docs.map((doc) => doc.id);
 };
 
-export const getSurvey = async (id: string): Promise<Survey> => {
-  const surveyRef = doc(db, 'surveys', id);
-  const querySnapshot = await getDoc(surveyRef);
+export const getTest = async (id: string): Promise<Test> => {
+  const testRef = doc(db, 'tests', id);
+  const querySnapshot = await getDoc(testRef);
   return {
-    ...(querySnapshot.data() as Omit<Survey, 'id'>),
+    ...(querySnapshot.data() as Omit<Test, 'id'>),
     id: querySnapshot.id,
   };
 };
 
-export const updateSurvey = async (formData: SurveyFormValues) => {
-  const selectedSurveyRef = doc(db, 'surveys', formData.id);
-  await setDoc(selectedSurveyRef, formData as Record<string, any>);
+export const updateTest = async (formData: TestFormValues) => {
+  const selectedTestRef = doc(db, 'tests', formData.id);
+  await setDoc(selectedTestRef, formData as Record<string, any>);
 };
 
-export const createSurvey = async (formData: SurveyFormValues) => {
-  const collectionRef = collection(db, 'surveys');
+export const createTest = async (formData: TestFormValues) => {
+  const collectionRef = collection(db, 'tests');
   const { id, ...rest } = formData;
   await addDoc(collectionRef, rest);
 };

@@ -1,25 +1,24 @@
-import SurveyLinkCard from '@/components/Cards/SurveyLinkCard';
+import TestLinkCard from '@/components/Cards/TestLinkCard';
 import BaseLayout from '@/components/Layouts/BaseLayout';
-import { Survey } from '@/types/surveys';
-import { Heading, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Test } from '@/types/tests';
+import { SimpleGrid, Stack } from '@chakra-ui/react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { getAllSurveys } from '../../firebaseClient';
+import { getAllTests } from '../../firebaseClient';
 
-const SurveysPage = ({
-  surveys,
+const TestsPage = ({
+  tests,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
-    <BaseLayout title="Surveys">
+    <BaseLayout title="Tests">
       <Stack
         spacing={8}
         padding={8}
         minHeight="100vh"
         bgGradient="radial(blackAlpha.50, blackAlpha.200)"
       >
-        <Heading as="h1">Choose a survey</Heading>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
-          {surveys.map((survey: Survey) => (
-            <SurveyLinkCard key={survey.id} survey={survey} />
+          {tests.map((test: Test) => (
+            <TestLinkCard key={test.id} test={test} />
           ))}
         </SimpleGrid>
       </Stack>
@@ -28,15 +27,15 @@ const SurveysPage = ({
 };
 
 export const getServerSideProps: GetServerSideProps<{
-  surveys: Survey[];
+  tests: Test[];
 }> = async () => {
-  const surveys: Survey[] = await getAllSurveys();
+  const tests: Test[] = await getAllTests();
 
   return {
     props: {
-      surveys,
+      tests,
     },
   };
 };
 
-export default SurveysPage;
+export default TestsPage;

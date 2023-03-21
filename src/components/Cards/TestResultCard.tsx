@@ -1,5 +1,5 @@
 import { Page } from '@/types/pages';
-import { SurveyResult } from '@/types/surveys';
+import { TestResult } from '@/types/tests';
 import {
   Button,
   Card,
@@ -11,10 +11,10 @@ import {
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 
-interface SurveyResultCardProps {
-  result: SurveyResult;
+interface TestResultCardProps {
+  result: TestResult;
 }
-const SurveyResultCard = ({ result }: SurveyResultCardProps) => {
+const TestResultCard = ({ result }: TestResultCardProps) => {
   return (
     <Card
       width={{ base: '100%', md: '65%' }}
@@ -41,4 +41,4 @@ const SurveyResultCard = ({ result }: SurveyResultCardProps) => {
   );
 };
 
-export default SurveyResultCard;
+export default TestResultCard;

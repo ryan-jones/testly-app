@@ -1,18 +1,18 @@
-import { SurveyResult } from './surveys';
+import { TestResult } from './tests';
 
 export interface UserType {
   email: string | null;
   uid: string | null;
 }
 
-export interface CompletedSurvey {
-  surveyName: string;
-  surveyResult: SurveyResult;
+export interface CompletedTest {
+  testName: string;
+  testResult: TestResult;
 }
 
 export interface UserProfile {
   id: string;
   email: string;
   username: string;
-  completedSurveys: CompletedSurvey[];
+  completedTests: CompletedTest[];
 }
